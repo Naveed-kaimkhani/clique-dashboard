@@ -3,7 +3,7 @@ import 'package:post_krakren_dashboard/components/gradient_text.dart';
 import 'package:post_krakren_dashboard/constants/app_colors.dart';
 import 'package:post_krakren_dashboard/models/product.dart';
 
-class VideoApprovalScreen extends StatelessWidget {
+class ProductPage extends StatelessWidget {
   final List<Product> products = [
     Product(
       title: 'Tuarna Alpha Cat Food Chicken & Vegetable, 1300g',
@@ -31,7 +31,7 @@ class VideoApprovalScreen extends StatelessWidget {
     ),
   ];
 
-  VideoApprovalScreen({super.key});
+  ProductPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class VideoApprovalScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GradientText(
-            "Approve or Reject Videos",
+            "All Products",
             gradient: AppColors.appGradientColors,
             fontSize: 22,
           ),

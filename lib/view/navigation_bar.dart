@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:post_krakren_dashboard/view/chat_screens.dart/message_center_screen.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
-import 'package:post_krakren_dashboard/view/invite_team/invite_team_one.dart';
-import 'package:post_krakren_dashboard/view/products_screen/products_screen.dart';
-import 'package:post_krakren_dashboard/view/team_management/team_management_screen.dart';
 import 'package:post_krakren_dashboard/view/users_influencers/user_influencers_screens.dart';
+import 'package:post_krakren_dashboard/view/products_screen/product_page.dart';
 import 'package:post_krakren_dashboard/view/videos_approval/videos_approval.dart';
 
 import '../components/index.dart';
-
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -25,9 +21,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // const ConnectSocials(),
     UsersInfluencersScreen(),
 // ProfileScreen(),
-    ProductGridScreen(),
-    VideosApprovalScreen(),
-     TeamManagementScreen(),
+    ProductPage(),
+    VideoApprovalScreen(),
+    ProductPage(),
     const CalendarScreen(),
     const ChatScreen(),
     const SettingsScreen(),
@@ -36,26 +32,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // const HelpScreen(),
   ];
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Row(
-      children: [
-        // Transparent Sidebar
-        Container(
-          width: 250,
-          color: const Color.fromARGB(255, 255, 253, 253), // Adjust transparency
-          child: _buildDrawer(),
-        ),
-        // Main Content (Changes on click)
-        Expanded(
-          child: _screens[_selectedIndex],
-        ),
-      ],
-    ),
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          // Transparent Sidebar
+          Container(
+            width: 250,
+            // color: const Color.fromARGB(255, 255, 253, 253),
 
+            color: Colors.white,
+            // // Adjust transparency
+            child: _buildDrawer(),
+          ),
+          // Main Content (Changes on click)
+          Expanded(
+            child: _screens[_selectedIndex],
+          ),
+        ],
+      ),
+    );
+  }
 
   // Sidebar Navigation Menu
   Widget _buildDrawer() {
@@ -63,10 +61,9 @@ Widget build(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          child:  Image.asset(AppSvgIcons.appLogo)
-        ),
+            padding: const EdgeInsets.all(20),
+            width: double.infinity,
+            child: Image.asset(AppSvgIcons.appLogo)),
         _drawerItem(Icons.dashboard, "Dashboard", 0),
         _drawerItem(Icons.group, "Users / Influencers", 1),
         _drawerItem(Icons.calendar_today, "Product Details", 2),
@@ -82,12 +79,16 @@ Widget build(BuildContext context) {
 
   Widget _drawerItem(IconData icon, String title, int index) {
     return ListTile(
-      leading: Icon(icon, color: _selectedIndex == index ? AppColors.appColor : Colors.black54),
+      leading: Icon(icon,
+          color: _selectedIndex == index ? AppColors.appColor : Colors.black54),
       title: Text(
         title,
-        style: TextStyle(color: _selectedIndex == index ? AppColors.appColor  : Colors.black),
+        style: TextStyle(
+            color: _selectedIndex == index ? AppColors.appColor : Colors.black),
       ),
-      tileColor: _selectedIndex == index ? Colors.blue.withOpacity(0.3) : Colors.transparent,
+      tileColor: _selectedIndex == index
+          ? Colors.blue.withOpacity(0.3)
+          : Colors.transparent,
       onTap: () {
         setState(() {
           _selectedIndex = index;
@@ -169,7 +170,8 @@ Widget _buildScreenContent(String title, List<Widget> items) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 20),
         Expanded(
           child: items.isNotEmpty
@@ -186,13 +188,16 @@ Widget _socialMediaTile(String platform, Color color, bool isConnected) {
   return Card(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: ListTile(
-      leading: CircleAvatar(backgroundColor: color, child: Icon(Icons.check, color: Colors.white)),
+      leading: CircleAvatar(
+          backgroundColor: color,
+          child: Icon(Icons.check, color: Colors.white)),
       title: Text(platform),
       subtitle: Text(isConnected ? "Connected" : "Reconnect"),
       trailing: isConnected
           ? TextButton(
               onPressed: () {},
-              child: const Text("Disconnect", style: TextStyle(color: Colors.red)),
+              child:
+                  const Text("Disconnect", style: TextStyle(color: Colors.red)),
             )
           : null,
     ),
