@@ -22,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     UsersInfluencersScreen(),
 // ProfileScreen(),
     ProductPage(),
-    VideoApprovalScreen(),
+    VideosApprovalScreen(),
     ProductPage(),
     const CalendarScreen(),
     const ChatScreen(),
