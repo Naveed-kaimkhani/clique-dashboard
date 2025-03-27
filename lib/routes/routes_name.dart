@@ -6,7 +6,7 @@ static const String checkoutScreen = '/CheckoutScreen';
 static const String cartScreen = '/CartScreen';
 static const String groupChatScreen = '/GroupChatScreen';
 static const String homeScreen = '/HomeScreen';
-static const String dashboardScreen = '/DashboardScreen';
+
 static const String oTPScreen = '/OTPScreen';
 
 static const String uploadVideo = '/UploadVideo';

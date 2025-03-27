@@ -1,81 +1,37 @@
+
+
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/gradient_text.dart';
 import 'package:post_krakren_dashboard/constants/app_colors.dart';
-import 'package:post_krakren_dashboard/models/product.dart';
+import 'package:post_krakren_dashboard/data/model/popstream_request%20.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:post_krakren_dashboard/video_popup_player.dart';
+import 'package:post_krakren_dashboard/view_model/videos_approval_viewModel.dart';
 
-class VideosApprovalScreen extends StatefulWidget {
-  const VideosApprovalScreen({Key? key}) : super(key: key);
-
-  @override
-  State<VideosApprovalScreen> createState() => _VideosApprovalScreenState();
-}
-
-class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
-  final List<Product> products = [
-    Product(
-      title: 'Tuarna Alpha Cat Food Chicken & Vegetable, 1300g',
-      videoUrl: 'https://example.com/video1.mp4',
-      price: 120.0,
-      originalPrice: 150.0,
-      image: 'https://example.com/image1.jpg',
-    ),
-    Product(
-      title: 'Tuarna Alpha Cat Food Chicken & Vegetable, 1300g',
-      videoUrl: 'https://example.com/video2.mp4',
-      price: 150.0,
-      originalPrice: 180.0,
-      image: 'https://example.com/image2.jpg',
-    ),
-    Product(
-      title: 'Tuarna Alpha Cat Food Chicken & Vegetable, 1300g',
-      videoUrl: 'https://example.com/video3.mp4',
-      price: 150.0,
-      originalPrice: 180.0,
-      image: 'https://example.com/image3.jpg',
-    ),
-    Product(
-      title: 'Tuarna Alpha Cat Food Chicken & Vegetable, 1300g',
-      videoUrl: 'https://example.com/video4.mp4',
-      price: 150.0,
-      originalPrice: 180.0,
-      image: 'https://example.com/image4.jpg',
-    ),
-  ];
-
-  void _handleApprove(int index) {
-    setState(() {
-      products[index].isApproved = true;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("Video approved"),
-        backgroundColor: AppColors.approveButtonColor,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _handleReject(int index) {
-    setState(() {
-      products[index].isApproved = false;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("Video rejected"),
-        backgroundColor: AppColors.rejectButtonColor,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
+class VideosApprovalScreen extends StatelessWidget {
+  final VideosApprovalViewModel viewModel = Get.put(VideosApprovalViewModel());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: Padding(
+      body: Obx(() {
+        if (viewModel.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (viewModel.error.value.isNotEmpty) {
+          return Center(child: Text(viewModel.error.value));
+        }
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: constraints.maxWidth < 600 ? 12 : 24,
                   vertical: 16,
@@ -85,12 +41,14 @@ class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
                   children: [
                     _buildHeader(context),
                     const SizedBox(height: 24),
-                    _buildProductGrid(context),
+                    _buildRequestGrid(context),
                   ],
-                )),
-          );
-        },
-      ),
+                ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
@@ -135,7 +93,7 @@ class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
     );
   }
 
-  Widget _buildProductGrid(BuildContext context) {
+  Widget _buildRequestGrid(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
@@ -155,7 +113,7 @@ class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: products.length,
+          itemCount: viewModel.requests.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 16,
@@ -163,10 +121,10 @@ class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
             childAspectRatio: _getAspectRatio(screenWidth),
           ),
           itemBuilder: (context, index) {
-            return ProductCard(
-              product: products[index],
-              onApprove: () => _handleApprove(index),
-              onReject: () => _handleReject(index),
+            return RequestCard(
+              request: viewModel.requests[index],
+              onApprove: () => viewModel.approveRequest(viewModel.requests[index].id),
+              onReject: () => viewModel.rejectRequest(viewModel.requests[index].id),
             );
           },
         );
@@ -181,18 +139,58 @@ class _VideosApprovalScreenState extends State<VideosApprovalScreen> {
   }
 }
 
-class ProductCard extends StatelessWidget {
-  final Product product;
+class RequestCard extends StatelessWidget {
+  final PopstreamRequest request;
   final VoidCallback onApprove;
   final VoidCallback onReject;
 
-  const ProductCard({
-    required this.product,
+  const RequestCard({
+    required this.request,
     required this.onApprove,
     required this.onReject,
     Key? key,
   }) : super(key: key);
 
+
+Widget _buildNetworkImage(String thumbnailUrl) {
+  final fullUrl = 'https://dev.moutfits.com$thumbnailUrl';
+  log(fullUrl);
+  try {
+    return Image(
+  image: CachedNetworkImageProvider(
+    'https://dev.moutfits.com${request.thumbnailUrl}',
+  
+    headers: {
+      'Accept': 'image/*',
+      // Add any required headers
+    },
+  ),
+  fit: BoxFit.cover,
+  loadingBuilder: (context, child, loadingProgress) {
+    if (loadingProgress == null) return child;
+    return Center(
+      child: CircularProgressIndicator(
+        value: loadingProgress.expectedTotalBytes != null
+            ? loadingProgress.cumulativeBytesLoaded /
+                loadingProgress.expectedTotalBytes!
+            : null,
+      ),
+    );
+  },
+  errorBuilder: (context, error, stackTrace) {
+    return Container(
+      color: Colors.grey[200],
+      child: Icon(Icons.error),
+    );
+  },
+);
+  } catch (e) {
+    return Container(
+      color: Colors.grey[200],
+      child: Icon(Icons.broken_image),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -211,19 +209,43 @@ class ProductCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Image.asset(
-                      'assets/images/bowl3.jpeg',
-                      fit: BoxFit.cover,
-                    ),
+//            ClipRRect(
+//   borderRadius: BorderRadius.circular(8),
+//   child: AspectRatio(
+//     aspectRatio: 16 / 9,
+//     child: _buildNetworkImage(request.thumbnailUrl),
+//   ),
+// ),
+
+
+  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: _buildNetworkImage(request.thumbnailUrl),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: IconButton(
+                          icon: Icon(Icons.play_arrow, color: Colors.white,size: 40,),
+                          // Icons.play_arrow,
+                          color: Colors.white,
+                          onPressed: () => _showVideoPopup(context, request.videoUrl),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
                 const SizedBox(height: 8),
                 Text(
-                  product.title,
+                  request.name,
                   style: TextStyle(
                     fontSize: isSmallScreen ? 14 : 16,
                     fontWeight: FontWeight.w600,
@@ -233,14 +255,13 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${product.price.toStringAsFixed(2)}',
+                  'Created by: ${request.createdBy}',
                   style: TextStyle(
-                    fontSize: isSmallScreen ? 16 : 18,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+                    fontSize: isSmallScreen ? 12 : 14,
+                    color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 28),
                 _buildButtonRow(isSmallScreen),
               ],
             ),
@@ -249,8 +270,18 @@ class ProductCard extends StatelessWidget {
       },
     );
   }
-
+void _showVideoPopup(BuildContext context, String videoUrl) {
+    final fullVideoUrl = 'https://dev.moutfits.com$videoUrl';
+    
+    showDialog(
+      context: context,
+      builder: (context) => VideoPopupPlayer(videoUrl: fullVideoUrl),
+      barrierColor: Colors.black87,
+    );
+  }
   Widget _buildButtonRow(bool isSmallScreen) {
+    final isPending = request.status == 'pending';
+    
     return SizedBox(
       height: isSmallScreen ? 80 : 36,
       child: isSmallScreen
@@ -258,17 +289,17 @@ class ProductCard extends StatelessWidget {
               children: [
                 _buildActionButton(
                   icon: Icons.check,
-                  label: "Approve",
-                  color: AppColors.approveButtonColor,
-                  onPressed: onApprove,
+                  label: isPending ? "Approve" : "Approved",
+                  color: isPending ? AppColors.approveButtonColor : Colors.green,
+                  onPressed: isPending ? onApprove : null,
                   isSmallScreen: isSmallScreen,
                 ),
                 const SizedBox(height: 8),
                 _buildActionButton(
                   icon: Icons.close,
-                  label: "Reject",
-                  color: AppColors.rejectButtonColor,
-                  onPressed: onReject,
+                  label: isPending ? "Reject" : "Rejected",
+                  color: isPending ? AppColors.rejectButtonColor : Colors.red,
+                  onPressed: isPending ? onReject : null,
                   isSmallScreen: isSmallScreen,
                 ),
               ],
@@ -278,9 +309,9 @@ class ProductCard extends StatelessWidget {
                 Expanded(
                   child: _buildActionButton(
                     icon: Icons.check,
-                    label: "Approve",
-                    color: AppColors.approveButtonColor,
-                    onPressed: onApprove,
+                    label: isPending ? "Approve" : "Approved",
+                    color: isPending ? AppColors.approveButtonColor : Colors.green,
+                    onPressed: isPending ? onApprove : null,
                     isSmallScreen: isSmallScreen,
                   ),
                 ),
@@ -288,9 +319,9 @@ class ProductCard extends StatelessWidget {
                 Expanded(
                   child: _buildActionButton(
                     icon: Icons.close,
-                    label: "Reject",
-                    color: AppColors.rejectButtonColor,
-                    onPressed: onReject,
+                    label: isPending ? "Reject" : "Rejected",
+                    color: isPending ? AppColors.rejectButtonColor : Colors.red,
+                    onPressed: isPending ? onReject : null,
                     isSmallScreen: isSmallScreen,
                   ),
                 ),
@@ -303,7 +334,7 @@ class ProductCard extends StatelessWidget {
     required IconData icon,
     required String label,
     required Color color,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
     required bool isSmallScreen,
   }) {
     return SizedBox(

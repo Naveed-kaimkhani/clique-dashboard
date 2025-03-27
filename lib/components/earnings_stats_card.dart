@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_krakren_dashboard/constants/app_colors.dart';
 
 class EarningsStatsCard extends StatelessWidget {
   const EarningsStatsCard({super.key});
@@ -75,7 +76,7 @@ class EarningsStatsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.blue,
+                    color:AppColors.appColor,
                     width: 8,
                   ),
                 ),
@@ -85,7 +86,7 @@ class EarningsStatsCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade800,
+                      color: AppColors.appColor,
                     ),
                   ),
                 ),
