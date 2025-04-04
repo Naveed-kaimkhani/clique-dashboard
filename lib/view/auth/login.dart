@@ -21,6 +21,7 @@ class LoginScreen extends StatelessWidget {
     final isLargeScreen = screenWidth > 768;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Container(
           width: isLargeScreen ? 500 : 350,
@@ -49,14 +50,18 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                TextFormField(
+                  TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
                     labelText: 'Email',
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
                   ),
-                  keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -71,7 +76,12 @@ class LoginScreen extends StatelessWidget {
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
                     labelText: 'Password',
+                    
+                    labelStyle: TextStyle(color: Colors.black),
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.lock),
                   ),
@@ -93,28 +103,16 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       // Forgot password action
                     },
-                    child: Text('Forgot Password?'),
+                    child: Text('Forgot Password?',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
-                // SizedBox(
-                //   width: double.infinity,
-                //   height: 50,
-                //   child: ElevatedButton(
-                //     onPressed: _submitForm,
-                //     child: Text(
-                //       'Login',
-                //       style: TextStyle(fontSize: 16),
-                //     ),
-                //     style: ElevatedButton.styleFrom(
-                //       // primary: Colors.blueAccent,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(8),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-
+               
                  AuthButton(
                 buttonText: 'Login',
                 isLoading: otpViewModel.isLoading,
@@ -149,18 +147,18 @@ class LoginScreen extends StatelessWidget {
                 },
               ),
                 SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () {
-                        // Navigate to sign up
-                      },
-                      child: Text('Sign Up'),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text("Don't have an account?"),
+                //     TextButton(
+                //       onPressed: () {
+                //         // Navigate to sign up
+                //       },
+                //       child: Text('Sign Up'),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

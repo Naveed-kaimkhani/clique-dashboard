@@ -90,10 +90,10 @@ class _DashboardHomeState extends State<DashboardHome> {
                     DashboardStats(),
                     SizedBox(height: isMobile ? 12 : 24),
                     Container(
-                      height: isMobile ? 300 : 400,
+                      height:420,
                       width: double.infinity, // Changed from fixed 1300
                       constraints: BoxConstraints(
-                        minHeight: 300,
+                        minHeight: 350,
                         maxHeight: 500,
                       ),
                       decoration: BoxDecoration(
@@ -107,7 +107,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                           )
                         ],
                       ),
-                      child: LineChartSample1(),
+                      child: EnhancedBarChart(isShowingMainData: true,),
                     ),
                     SizedBox(height: isMobile ? 12 : 24),
                     // Responsive card row
