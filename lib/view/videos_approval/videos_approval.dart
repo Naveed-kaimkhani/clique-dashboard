@@ -245,7 +245,7 @@ Widget _buildNetworkImage(String thumbnailUrl) {
                   ),
                 const SizedBox(height: 8),
                 Text(
-                  request.name,
+                  request.name??"",
                   style: TextStyle(
                     fontSize: isSmallScreen ? 14 : 16,
                     fontWeight: FontWeight.w600,

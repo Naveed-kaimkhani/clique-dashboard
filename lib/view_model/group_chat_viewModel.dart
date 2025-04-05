@@ -52,7 +52,7 @@ class GroupChatViewModel extends GetxController {
     try {
       final response = await ApiClient.getMessages(
         url: "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=20",
-        headers: {"Authorization": "Bearer $token"},
+        headers: {"Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387"},
       );
 
       if (response.statusCode == 200) {
@@ -195,7 +195,7 @@ Future<void> _fetchMessages(bool loadMore) async {
 
     final response = await ApiClient.getMessages(
       url: apiUrl,
-      headers: {"Authorization": "Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941"},
+      headers: {"Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387"},
     );
 
     if (response.statusCode == 200) {

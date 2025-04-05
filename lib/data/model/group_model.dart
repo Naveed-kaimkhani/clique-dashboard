@@ -47,7 +47,7 @@ Future<List<Group>> fetchGroups() async {
   final response = await http.get(
     Uri.parse('https://dev.moutfits.com/api/v1/cometchat/groups'),
     headers: {
-      'Authorization': 'Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941',
+      'Authorization': 'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
       'Content-Type': 'application/json',
     },
   );

@@ -13,11 +13,13 @@ class PopstreamRepository {
       Uri.parse('$baseUrl/popstream/requests'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941',
+        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
      
         // 'Authorization': 'Bearer $token',
       },
     );
+    log("Fetching requests from: $baseUrl/popstream/requests");
+    log("Response status code: ${response.statusCode}");
       log(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -27,28 +29,59 @@ class PopstreamRepository {
     }
   }
 
+  // Future<void> approveRequest(int id) async {
+  //   log("approved request id: $id");
+  //   final response = await http.post(
+  //     Uri.parse('$baseUrl/popstream/approve/$id'),
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Authorization': 'Bearer 353|5mRTVQaa7G01kLanrbABWtvsACwu0W7CO391h1wP29163da9',
+  //     },
+  //   );
+  //   log("kyaa issueee hyyyy ytrrrrr krna approve");
+  // log(response.body);
+  // log(response.statusCode.toString());
+  //   if (response.statusCode != 200) {
+  //     throw Exception('Failed to approve request');
+  //   }else{
+  //     log('Request approved successfully');
+  //   }
+  // }
+
   Future<void> approveRequest(int id) async {
+  try {
+    log("Approving request with ID: $id");
+
     final response = await http.post(
       Uri.parse('$baseUrl/popstream/approve/$id'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941',
+        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
       },
     );
-  log(response.body);
+    log(response.toString());
+    log("Response body: ${response.body}");
+    log("Status code: ${response.statusCode}");
+
     if (response.statusCode != 200) {
       throw Exception('Failed to approve request');
-    }else{
-      print('Request approved successfully');
+    } else {
+      log('Request approved successfully');
     }
+  } catch (e, stackTrace) {
+    log('Error approving request: $e');
+    // log('Stack trace: $stackTrace');
+    // You can also show a snackbar or toast here if needed
   }
+}
+
 
   Future<void> rejectRequest(int id) async {
     final response = await http.post(
       Uri.parse('$baseUrl/popstream/reject/$id'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941',
+        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
       },
     );
 

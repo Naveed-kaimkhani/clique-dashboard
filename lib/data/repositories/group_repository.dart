@@ -32,7 +32,7 @@ class GroupRepository {
         ApiEndpoints.joinGroup,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${userController.token.value}",
+          "Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387",
         },
         body: body,
       );
@@ -51,7 +51,7 @@ static  Future<Map<String, dynamic>> fetchGroupMembers(String authToken, String 
       final response = await http.get(
         Uri.parse('https://dev.moutfits.com/api/v1/cometchat/groups/$guid/members'),
         headers: {
-          'Authorization': 'Bearer $authToken',
+          'Authorization': 'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
         },
       );
       if (response.statusCode == 200) {
@@ -118,7 +118,7 @@ static  Future<Map<String, dynamic>> fetchGroupMembers(String authToken, String 
         ApiEndpoints.getGroups,
         headers: {
           // 'Authorization': 'Bearer 257|VR9svQCn7tuN1Ilq7lghllUiBSUq8nsvxvlqYs0y6ed0e9a6',          
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
           'Content-Type': 'application/json',
         },
       );

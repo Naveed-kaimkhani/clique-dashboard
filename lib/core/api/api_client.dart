@@ -107,7 +107,7 @@ Future<http.Response> getInfluencersApi({
 
   // Add auth token to headers if provided
   if (authToken != null) {
-    headers["Authorization"] = "Bearer 325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941";
+    headers["Authorization"] = "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387";
   }
 
   return await http.get(uri, headers: headers);

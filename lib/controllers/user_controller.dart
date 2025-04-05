@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserController extends GetxController {
   late SharedPreferences prefs;
   Rxn<User> user = Rxn<User>();
-  var token = ''.obs;
+  var token = '1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387'.obs;
   var revoAccessToken = ''.obs;
   var revoLamdaToken = ''.obs;
   var userEmail = ''.obs;

@@ -96,6 +96,7 @@ class InfluencerRepository {
         "role": "influencer",
       }
        );
+       log(response.body.toString());
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
       List<InfluencerModel> users = body.map((dynamic item) => InfluencerModel.fromJson(item)).toList();
@@ -111,7 +112,7 @@ class InfluencerRepository {
     try {
       final response = await apiClient.post(url: '${ApiEndpoints.baseUrl}/follow/$userId',
       headers: {"Content-Type": "application/json",
-                  "Authorization": "Bearer $token", // Attach Bearer Token
+                  "Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387", // Attach Bearer Token
 
         },
       );
@@ -131,7 +132,7 @@ class InfluencerRepository {
     try {
       final response = await apiClient.post(url: '${ApiEndpoints.baseUrl}/unfollow/$userId',
       headers: {"Content-Type": "application/json",
-                  "Authorization": "Bearer $token", // Attach Bearer Token
+                  "Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387", // Attach Bearer Token
 
         },
       );

@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           bodySmall: TextStyle(fontFamily: 'ClashDisplay'),
         ),
       ),
-      home: DashboardHome(),      
+      home: DashboardScreen(),      
       // initialRoute: RouteName.onboardScreen,
       
       getPages: AppRoutes.getAppRoutes(),
