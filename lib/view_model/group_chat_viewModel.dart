@@ -7,8 +7,6 @@ import 'package:post_krakren_dashboard/core/api/api_client.dart';
 import 'package:post_krakren_dashboard/core/api/api_endpoints.dart';
 import 'package:post_krakren_dashboard/data/model/message_model.dart';
 
-
-
 class GroupChatViewModel extends GetxController {
   final String groupId;
   final String token;
@@ -34,7 +32,8 @@ class GroupChatViewModel extends GetxController {
   void onInit() {
     super.onInit();
     _fetchInitialMessages(); // Fetch initial 20 messages
-    _timer = Timer.periodic(Duration(milliseconds: 800), (timer) => _fetchMessages(false));
+    _timer = Timer.periodic(
+        Duration(milliseconds: 800), (timer) => _fetchMessages(false));
   }
 
   @override
@@ -51,14 +50,17 @@ class GroupChatViewModel extends GetxController {
 
     try {
       final response = await ApiClient.getMessages(
-        url: "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=20",
-        headers: {"Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387"},
+        url:
+            "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=20",
+        headers: {"Authorization": "Bearer $token"},
       );
+      log(response.body);
 
       if (response.statusCode == 200) {
         final dynamic responseData = jsonDecode(response.body);
 
-        if (responseData is Map<String, dynamic> && responseData.containsKey("messages")) {
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey("messages")) {
           final messagesData = responseData["messages"];
 
           if (messagesData is List && messagesData.isNotEmpty) {
@@ -79,162 +81,65 @@ class GroupChatViewModel extends GetxController {
     }
   }
 
-  // Fetch messages with pagination
-  // Future<void> _fetchMessages(bool loadMore) async {
-  //   if (_isLoading || (loadMore && !hasMoreMessages)) return;
-  //   _isLoading = true;
-
-  //   try {
-  //     String apiUrl = "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=20";
-
-  //     if (loadMore && _messages.isNotEmpty) {
-  //       // Fetch older messages with timestamp parameter
-  //       int lastMessageTimestamp = _messages.first.time; // Timestamp of the oldest message
-  //       int oneDayBack = lastMessageTimestamp - 86400; // Subtract 1 day in seconds (Unix format)
-  //       apiUrl += "&timeStamp=$oneDayBack";
-  //     }
-
-  //     final response = await ApiClient.getMessages(
-  //       url: apiUrl,
-  //       headers: {"Authorization": "Bearer $token"},
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final dynamic responseData = jsonDecode(response.body);
-
-  //       if (responseData is Map<String, dynamic> && responseData.containsKey("messages")) {
-  //         final messagesData = responseData["messages"];
-
-  //         if (messagesData is List && messagesData.isNotEmpty) {
-  //           final List<MessageModel> newMessages = messagesData
-  //               .map((msg) => MessageModel.fromJson({...msg, 'userId': userId}))
-  //               .toList();
-
-  //           if (loadMore) {
-  //             _messages.insertAll(0, newMessages); // Add older messages at the start
-  //           } else {
-  //             _messages = newMessages.reversed.toList(); // Show latest messages first
-  //           }
-
-  //           _messageController.add(_messages);
-  //         } else {
-  //           hasMoreMessages = false; // No more messages to load
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     debugPrint("Error fetching messages: $e");
-  //   } finally {
-  //     _isLoading = false;
-  //   }
-  // }
-
-
-// Future<void> _loadMoreMessages() async {
-//   // if (_isLoading || (loadMore && !hasMoreMessages)) return;
-//   // _isLoading = true;
-//   //   if (loadMore) {
-//   //     log("loading more messages");
-//   //   }
-//   try {
-//      int lastMessageTimestamp = _messages.first.time; // Timestamp of the oldest message
-//       // apiUrl += "?limit=200&timeStamp=$lastMessageTimestamp-${8000}";
-//     String apiUrl = "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=200&timeStamp=$lastMessageTimestamp-${8000}";
-
-//     log("Calling api");
-//     final response = await ApiClient.getMessages(
-//       url: apiUrl,
-//       headers: {"Authorization": "Bearer 323|q21FYel7g9rnR1E9YgafR9CdAN0GosaJqvNO5JM2fd0ffb84"},
-//     );
-//     log(response.body);
-//     if (response.statusCode == 200) {
-//       final dynamic responseData = jsonDecode(response.body);
-
-//       if (responseData is Map<String, dynamic> && responseData.containsKey("messages")) {
-//         final messagesData = responseData["messages"];
-
-//         if (messagesData is List && messagesData.isNotEmpty) {
-//           final List<MessageModel> newMessages = messagesData
-//               .map((msg) => MessageModel.fromJson({...msg, 'userId': userId}))
-//               .toList();
-
-              
-// _messageController.add(newMessages);
-//             _messages.insertAll(0, newMessages); // Add new messages at the beginning
-//             // messagesStream.add(List.from(_messages)); // Update stream
-//         } else {
-//           hasMoreMessages = false; // No more messages to load
-//         }
-//       }
-//     }
-//   } catch (e) {
-//     debugPrint("Error fetching messages: $e");
-//   } finally {
-//     _isLoading = false;
-//   }
-// }
-
-Future<void> _fetchMessages(bool loadMore) async {
-  if (_isLoading || (loadMore && !hasMoreMessages)) return;
-  _isLoading = true;
+  Future<void> _fetchMessages(bool loadMore) async {
+    if (_isLoading || (loadMore && !hasMoreMessages)) return;
+    _isLoading = true;
     if (loadMore) {
       log("loading more messages");
     }
-  try {
-    String apiUrl = "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages";
+    try {
+      String apiUrl =
+          "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages";
 
-    if (loadMore && _messages.isNotEmpty) {
-      // Fetch older messages with timestamp parameter and limit of 200
-      int lastMessageTimestamp = _messages.first.time; // Timestamp of the oldest message
-      apiUrl += "?limit=200&timeStamp=$lastMessageTimestamp-${8000}"; // Use limit=200 for older messages
-   log("limit added");
-    } else {
-      // Fetch initial messages with limit of 20
-      apiUrl += "?limit=10";
-    }
+      if (loadMore && _messages.isNotEmpty) {
+        // Fetch older messages with timestamp parameter and limit of 200
+        int lastMessageTimestamp =
+            _messages.first.time; // Timestamp of the oldest message
+        apiUrl +=
+            "?limit=200&timeStamp=$lastMessageTimestamp-${8000}"; // Use limit=200 for older messages
+        log("limit added");
+      } else {
+        // Fetch initial messages with limit of 20
+        apiUrl += "?limit=10";
+      }
 
-    final response = await ApiClient.getMessages(
-      url: apiUrl,
-      headers: {"Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387"},
-    );
+      final response = await ApiClient.getMessages(
+        url: apiUrl,
+        headers: {"Authorization": "Bearer $token"},
+      );
 
-    if (response.statusCode == 200) {
-      final dynamic responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final dynamic responseData = jsonDecode(response.body);
 
-      if (responseData is Map<String, dynamic> && responseData.containsKey("messages")) {
-        final messagesData = responseData["messages"];
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey("messages")) {
+          final messagesData = responseData["messages"];
 
-        if (messagesData is List && messagesData.isNotEmpty) {
-          final List<MessageModel> newMessages = messagesData
-              .map((msg) => MessageModel.fromJson({...msg, 'userId': userId}))
-              .toList();
+          if (messagesData is List && messagesData.isNotEmpty) {
+            final List<MessageModel> newMessages = messagesData
+                .map((msg) => MessageModel.fromJson({...msg, 'userId': userId}))
+                .toList();
 
-          if (loadMore) {
-            _messages.insertAll(0, newMessages); // Add older messages at the start
+            if (loadMore) {
+              _messages.insertAll(
+                  0, newMessages); // Add older messages at the start
+            } else {
+              _messages =
+                  newMessages.reversed.toList(); // Show latest messages first
+            }
+
+            _messageController.add(_messages);
           } else {
-            _messages = newMessages.reversed.toList(); // Show latest messages first
+            hasMoreMessages = false; // No more messages to load
           }
-
-          _messageController.add(_messages);
-        } else {
-          hasMoreMessages = false; // No more messages to load
         }
       }
+    } catch (e) {
+      debugPrint("Error fetching messages: $e");
+    } finally {
+      _isLoading = false;
     }
-  } catch (e) {
-    debugPrint("Error fetching messages: $e");
-  } finally {
-    _isLoading = false;
   }
-}
-  // Future<void> loadMoreMessages() async {
-  //   // if (!_isLoading && hasMoreMessages) {
-  //   //   log("calling fetch message");
-  //   //   await _fetchMessages(true); // Fetch older messages
-  //   // }
-  //     log("calling fetch message");
-  //     await _loadMoreMessages(); 
-  // }
 
   Future<void> sendMessage(String message) async {
     if (message.isEmpty) return;
@@ -246,7 +151,7 @@ Future<void> _fetchMessages(bool loadMore) async {
           "Content-Type": "application/json",
           "accept": "application/json",
           "apikey": "f6985bc6a317824cc687e82794955efded6bf2b1",
-          "onBehalfOf": 83.toString(),
+          "onBehalfOf": userId,
         },
         body: jsonEncode({
           "category": "message",
@@ -268,5 +173,3 @@ Future<void> _fetchMessages(bool loadMore) async {
     }
   }
 }
-
-

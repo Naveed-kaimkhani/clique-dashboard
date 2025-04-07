@@ -135,7 +135,7 @@ class DiscoverViewModel extends GetxController {
   Future<void> fetchGroups() async {
     isLoading.value = true;
     try {
-      final fetchedGroups = await groupRepository.fetchGroups("325|XGd4gdeqZIeoMxppuqJfAwzE0zFyuIePsZGCIZk3d80b1941");
+      final fetchedGroups = await groupRepository.fetchGroups();
       groups.value = fetchedGroups;
       isLoading.value = false;
     } catch (e) {

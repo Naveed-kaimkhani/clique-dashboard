@@ -9,9 +9,10 @@ import 'package:post_krakren_dashboard/utils/utils.dart';
 import 'package:post_krakren_dashboard/view_model/auth_viewmodel.dart';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   final OTPViewModel otpViewModel = Get.put(OTPViewModel());
@@ -50,10 +51,10 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                  TextFormField(
+                TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
                     labelText: 'Email',
@@ -61,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
                   ),
-                    keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -73,37 +74,14 @@ class LoginScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    labelText: 'Password',
-                    
-                    labelStyle: TextStyle(color: Colors.black),
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
                       // Forgot password action
                     },
-                    child: Text('Forgot Password?',
+                    child: Text(
+                      'Forgot Password?',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -112,71 +90,41 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-               
-                 AuthButton(
-                buttonText: 'Login',
-                isLoading: otpViewModel.isLoading,
-                onPressed: ()async {
-  if (true) {
-  otpViewModel.isLoading.value = true;
-  try {
-    final SignupParams request = SignupParams(
-      name: "",
-      // email: emailController.text,
-      
-      email: _emailController.text,
-      phone: _passwordController.text,
-      role: "",
-    );
+                AuthButton(
+                  buttonText: 'Login',
+                  isLoading: otpViewModel.isLoading,
+                  onPressed: () async {
+                    if (true) {
+                      otpViewModel.isLoading.value = true;
 
-   await otpViewModel.login(request.email, request.phone);
-    
-  otpViewModel.isLoading.value = false;
-    // if (statusCode == 200) {
-    //   Get.toNamed(RouteName.oTPScreen, arguments: request);
-    // } else {
-    //   Utils.showCustomSnackBar("Error", "Failed to send OTP", ContentType.failure);
-    // }
-  } catch (error) {
-    Utils.showCustomSnackBar("Error", "Something went wrong", ContentType.failure);
-  } finally {
-    otpViewModel.isLoading.value = false;
-  }
-}
-                  
-                },
-              ),
+                      final SignupParams request = SignupParams(
+                        name: "",
+                        // email: emailController.text,
+
+                        email: _emailController.text,
+                        phone: "",
+                        role: "",
+                      );
+
+                      int statusCode = await otpViewModel.sendOTP(
+                        request.email,
+                      );
+                      otpViewModel.isLoading.value = false;
+                      if (statusCode == 200) {
+                        Get.toNamed(RouteName.oTPScreen, arguments: request);
+                      } else {
+                        Utils.showCustomSnackBar(
+                            "Error", "Failed to send OTP", ContentType.failure);
+                      }
+                    }
+                  },
+                ),
                 SizedBox(height: 30),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text("Don't have an account?"),
-                //     TextButton(
-                //       onPressed: () {
-                //         // Navigate to sign up
-                //       },
-                //       child: Text('Sign Up'),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Perform login action
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-      
-      // Here you would typically call your authentication service
-      print('Logging in with: $email, $password');
-      
-      // Example: Get.offAll(() => HomeScreen());
-    }
   }
 }

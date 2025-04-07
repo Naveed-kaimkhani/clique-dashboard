@@ -7,7 +7,7 @@ class ChatMessageWidget extends StatelessWidget {
   final bool isDesktop;
 
   const ChatMessageWidget({
-    super.key, 
+    super.key,
     required this.message,
     this.isDesktop = false,
   });
@@ -28,7 +28,7 @@ class ChatMessageWidget extends StatelessWidget {
       alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: isDesktop ? screenWidth * 0.5 : screenWidth * 0.75,
+          maxWidth: isDesktop ? screenWidth * 0.3 : screenWidth * 0.75,
         ),
         child: Container(
           margin: EdgeInsets.symmetric(
@@ -43,10 +43,10 @@ class ChatMessageWidget extends StatelessWidget {
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(16),
               topRight: const Radius.circular(16),
-              bottomLeft: message.isMe 
+              bottomLeft: message.isMe
                   ? const Radius.circular(16)
                   : const Radius.circular(4),
-              bottomRight: message.isMe 
+              bottomRight: message.isMe
                   ? const Radius.circular(4)
                   : const Radius.circular(16),
             ),
@@ -105,8 +105,8 @@ class ChatMessageWidget extends StatelessWidget {
                     _formatTimestamp(message.time),
                     style: TextStyle(
                       fontSize: isDesktop ? 12 : 10,
-                      color: message.isMe 
-                          ? Colors.white.withOpacity(0.8) 
+                      color: message.isMe
+                          ? Colors.white.withOpacity(0.8)
                           : Colors.black.withOpacity(0.6),
                     ),
                   ),
@@ -114,8 +114,8 @@ class ChatMessageWidget extends StatelessWidget {
                   //   Icon(
                   //     _getStatusIcon(message.status!),
                   //     size: isDesktop ? 16 : 14,
-                  //     color: message.isMe 
-                  //         ? Colors.white.withOpacity(0.8) 
+                  //     color: message.isMe
+                  //         ? Colors.white.withOpacity(0.8)
                   //         : Colors.black.withOpacity(0.6),
                   //   ),
                 ],

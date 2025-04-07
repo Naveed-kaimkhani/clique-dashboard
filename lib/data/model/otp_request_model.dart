@@ -5,7 +5,7 @@ class OTPRequestModel {
   OTPRequestModel({required this.email, required this.otp});
 
   Map<String, dynamic> toJson() {
-    return {"email": email, "password": otp};
+    return {"email": email, "otp": otp};
   }
 }
 

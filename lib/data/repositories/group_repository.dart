@@ -1,22 +1,20 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/controllers/user_controller.dart';
 import 'package:post_krakren_dashboard/data/model/group_model.dart';
 import 'package:post_krakren_dashboard/utils/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/api/api_client.dart';
 import '../../core/api/api_endpoints.dart';
 import 'package:http/http.dart' as http;
 
-
 class GroupRepository {
   final ApiClient apiClient = Get.find<ApiClient>();
 
-      final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.find<UserController>();
+
   /// **Join Group API Call**
-  Future<bool> joinGroup(String guid, int uid ) async {
+  Future<bool> joinGroup(String guid, int uid) async {
     try {
       // if (guid.isEmpty || userController.token.value == null) {
       //   throw Exception("User token not found. Please log in again.");
@@ -32,36 +30,42 @@ class GroupRepository {
         ApiEndpoints.joinGroup,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387",
+          "Authorization":
+              "Bearer ${userController.token.value}",
         },
         body: body,
       );
-      
+
       return true; // Return true on successful join
-          
     } catch (e) {
       Utils.showCustomSnackBar("Failed to join group",
           Utils.mapErrorMessage(e.toString()), ContentType.failure);
       throw Exception("Failed to join group: $e");
     }
   }
-static  Future<Map<String, dynamic>> fetchGroupMembers(String authToken, String guid, int uid) async {
 
+  static Future<Map<String, dynamic>> fetchGroupMembers(
+      String authToken, String guid, int uid) async {
     try {
       final response = await http.get(
-        Uri.parse('https://dev.moutfits.com/api/v1/cometchat/groups/$guid/members'),
+        Uri.parse(
+            'https://dev.moutfits.com/api/v1/cometchat/groups/$guid/members'),
         headers: {
-          'Authorization': 'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
+          'Authorization':
+              'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
         },
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<String> fetchedImages = (data['data'] as List)
-            .map<String>((member) => member['link'] ?? 'https://default-image-url.com') // Handle null values
+            .map<String>((member) =>
+                member['link'] ??
+                'https://default-image-url.com') // Handle null values
             .toList();
 
         // Check if the current user's uid is in the members list
-        final isMember = (data['data'] as List).any((member) => member['uid'] == uid.toString());
+        final isMember = (data['data'] as List)
+            .any((member) => member['uid'] == uid.toString());
 
         return {
           'fetchedImages': fetchedImages,
@@ -76,64 +80,22 @@ static  Future<Map<String, dynamic>> fetchGroupMembers(String authToken, String 
   }
 
 
-
-    /// **Fetch Groups from API**
-  // Future<List<Group>> fetchGroups(String token) async {
-  //   try {
-  //     final prefs = await SharedPreferences.getInstance();
-    
-  //   final storedToken = prefs.getString('token');
-  //    log("again fetched the token$storedToken");
-      
-  //   if (storedToken != null) {
-  //       final response = await apiClient.getGroup(
-  //       ApiEndpoints.getGroups,
-  //       headers: {
-  //         'Authorization': 'Bearer $storedToken',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-      
-  //   }
-  //     final decodedResponse = jsonDecode(response.body);
-  //     return (decodedResponse['data'] as List)
-  //         .map((group) => Group.fromJson(group))
-  //         .toList();
-  //   } catch (e) {
-  //     // Utils.showCustomSnackBar("Failed to load groups", Utils.mapErrorMessage(e.toString()), ContentType.failure);
-  //     throw Exception("Failed to load groups: $e");
-  //   }
-  // }
-
-      /// **Fetch Groups from API**
-  Future<List<Group>> fetchGroups(String token) async {
+  /// **Fetch Groups from API**
+  Future<List<Group>> fetchGroups() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-    
-    // final storedToken = await prefs.getString('token');
-    //  log("again fetched the token$storedToken");
       
       final response = await apiClient.getGroup(
         ApiEndpoints.getGroups,
         headers: {
-          // 'Authorization': 'Bearer 257|VR9svQCn7tuN1Ilq7lghllUiBSUq8nsvxvlqYs0y6ed0e9a6',          
-          'Authorization': 'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',
+          'Authorization': 'Bearer ${userController.token.value}',
           'Content-Type': 'application/json',
         },
       );
-
-   
-
-      // if (response == null || !response.containsKey('data')) {
-      //   throw Exception("Invalid response from server");
-      // }
       final decodedResponse = jsonDecode(response.body);
       return (decodedResponse['data'] as List)
           .map((group) => Group.fromJson(group))
           .toList();
     } catch (e) {
-      // Utils.showCustomSnackBar("Failed to load groups", Utils.mapErrorMessage(e.toString()), ContentType.failure);
       throw Exception("Failed to load groups: $e");
     }
   }

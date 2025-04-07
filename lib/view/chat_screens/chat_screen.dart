@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/chat_message_widget.dart';
@@ -50,11 +49,10 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.minScrollExtent) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.minScrollExtent) {
       setState(() => _isLoadingOlderMessages = true);
-      // viewModel.loadMoreMessages().then((_) {
-      //   setState(() => _isLoadingOlderMessages = false);
-      // });
+
     }
   }
 
@@ -86,37 +84,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   Widget _buildDesktopLayout() {
     return Row(
       children: [
-        // Sidebar for desktop
-        // Container(
-        //   width: 300,
-        //   color: Colors.grey[50],
-        //   child: Column(
-        //     children: [
-        //       // _buildGroupHeader(true),
-        //       Expanded(
-        //         child: ListView(
-        //           children: [
-        //             // Add group members list here
-        //             ListTile(
-        //               leading: CircleAvatar(
-        //                 backgroundImage: widget.profileImage != null 
-        //                     ? NetworkImage(widget.profileImage!)
-        //                     : null,
-        //                 child: widget.profileImage == null 
-        //                     ? Icon(Icons.group) 
-        //                     : null,
-        //               ),
-        //               title: Text(widget.groupName),
-        //               subtitle: Text('${widget.memberCount} members'),
-        //             ),
-        //             // Add more members here
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // Main chat area
         Expanded(
           child: Column(
             children: [
@@ -149,8 +116,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: isSidebarHeader 
-            ? null 
+        border: isSidebarHeader
+            ? null
             : Border(bottom: BorderSide(color: Colors.grey[200]!)),
       ),
       child: Row(
@@ -164,11 +131,15 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ],
           CircleAvatar(
             radius: _isDesktop ? 24 : 20,
-            backgroundImage: widget.profileImage != null 
+            backgroundImage: widget.profileImage != null
                 ? NetworkImage(widget.profileImage!)
                 : null,
-            child: widget.profileImage == null 
-                ? Icon(Icons.group, size: _isDesktop ? 28 : 24, color: AppColors.appColor,) 
+            child: widget.profileImage == null
+                ? Icon(
+                    Icons.group,
+                    size: _isDesktop ? 28 : 24,
+                    color: AppColors.appColor,
+                  )
                 : null,
           ),
           SizedBox(width: 12),
@@ -236,12 +207,13 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           itemCount: messages.length + (_isLoadingOlderMessages ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == 0 && _isLoadingOlderMessages) {
-              return Center(child: Padding(
+              return Center(
+                  child: Padding(
                 padding: EdgeInsets.all(16),
                 child: CircularProgressIndicator(),
               ));
             }
-            
+
             final messageIndex = _isLoadingOlderMessages ? index - 1 : index;
             return ChatMessageWidget(
               message: messages[messageIndex],
@@ -254,7 +226,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   }
 
   Widget _buildChatInput() {
-    
     TextEditingController messageController = TextEditingController();
     return Container(
       padding: EdgeInsets.symmetric(
@@ -308,15 +279,17 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ),
           IconButton(
             icon: Icon(Icons.send),
-            onPressed: () async{
+            onPressed: () async {
               // Handle send
-       if (messageController.text.isEmpty) {
-         return ;
-
-       }
-              messageController.text.isEmpty ? null :
-             await  viewModel.sendMessage(messageController.text).then((_) => _scrollToBottom());
-            messageController.clear();
+              if (messageController.text.isEmpty) {
+                return;
+              }
+              messageController.text.isEmpty
+                  ? null
+                  : await viewModel
+                      .sendMessage(messageController.text)
+                      .then((_) => _scrollToBottom());
+              messageController.clear();
             },
           ),
         ],
