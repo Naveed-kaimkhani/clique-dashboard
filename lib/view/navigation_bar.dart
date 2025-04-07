@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_krakren_dashboard/view/chat_screens/chat_list.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
 import 'package:post_krakren_dashboard/view/users_influencers/user_influencers_screens.dart';
 import 'package:post_krakren_dashboard/view/products_screen/product_page.dart';
@@ -22,8 +23,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     UsersInfluencersScreen(),
 // ProfileScreen(),
     ProductPage(),
-    VideoApprovalScreen(),
-    ProductPage(),
+    VideosApprovalScreen(),
+    ChatList(),
     const CalendarScreen(),
     const ChatScreen(),
     const SettingsScreen(),
@@ -68,7 +69,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _drawerItem(Icons.group, "Users / Influencers", 1),
         _drawerItem(Icons.calendar_today, "Product Details", 2),
         _drawerItem(Icons.chat, "Videos Decision", 3),
-        const Divider(color: Colors.white54),
         _drawerItem(Icons.settings, "Annoucements", 4),
         _drawerItem(Icons.post_add, "Settings", 5),
         _drawerItem(Icons.account_circle, "Revenue", 6),

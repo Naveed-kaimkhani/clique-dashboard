@@ -17,12 +17,9 @@ class AppImages {
 
   static String brandVoice = "assets/images/brand_voice.png";
 
-  static String onboard_img0 = "assets/onboard0.png";
-  static String onboard_img1 = "assets/onboard1.png";
-  static String onboard_img2 = "assets/onboard2.png";
-  static String onboard_img3 = "assets/onboard3.png";
-  static String onboard_img4 = "assets/onboard4.png";
 
+  static String product3 = "assets/png/product3.png";
   static String restriction = "assets/images/restriction.png";
+   static String appLogo = "assets/png/clique_logo.png"; 
   
 }

@@ -1,13 +1,25 @@
-import 'package:device_preview/device_preview.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:post_krakren_dashboard/core/api/api_client.dart';
+import 'package:post_krakren_dashboard/data/repositories/auth_repo.dart';
+import 'package:post_krakren_dashboard/data/repositories/group_repository.dart';
+import 'package:post_krakren_dashboard/data/repositories/influencer_repository.dart';
 import 'package:post_krakren_dashboard/routes/app_routes.dart';
+import 'package:post_krakren_dashboard/view/auth/login.dart';
+import 'package:post_krakren_dashboard/view/auth/otp_screen.dart';
+import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
 import 'package:post_krakren_dashboard/view/navigation_bar.dart';
-import 'package:post_krakren_dashboard/view/products_screen/product_page.dart';
-import 'package:post_krakren_dashboard/view/videos_approval/videos_approval.dart';
 void main() {
+  
+   Get.lazyPut(()=>AuthRepository());
+   
+   Get.put(ApiClient());
+
+   Get.lazyPut(()=>GroupRepository());
+  //  Get.lazyPut(()=>AuthRepository());
+   
+   Get.lazyPut(()=>InfluencerRepository());
   runApp(
       //  DevicePreview(
       //   enabled: !kReleaseMode,
@@ -29,8 +41,7 @@ class MyApp extends StatelessWidget {
           bodySmall: TextStyle(fontFamily: 'ClashDisplay'),
         ),
       ),
-      home: DashboardScreen(),
-      
+      home: LoginScreen(),      
       // initialRoute: RouteName.onboardScreen,
       
       getPages: AppRoutes.getAppRoutes(),

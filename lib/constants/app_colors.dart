@@ -9,6 +9,12 @@ class AppColors {
               Color(0xFFF50E50), // Reddish Pink
             ],
   );
+
+  static const Color approveButtonColor = Color(0xFF4CAF50);
+  static const Color rejectButtonColor = Color(0xFFE53935);
+  static const Color primaryTextColor = Color(0xFF333333);
+  static const Color secondaryTextColor = Color(0xFF666666);
+  static const Color accentColor = Color(0xFF4776E6);
   static LinearGradient backGradientColors = LinearGradient(
             begin: Alignment.centerLeft, // 270 degrees
             end: Alignment.centerRight,

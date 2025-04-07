@@ -1,77 +1,123 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:post_krakren_dashboard/data/model/influencer_model.dart';
+import 'package:post_krakren_dashboard/view_model/influencer_viewmodel.dart';
 
 class UsersInfluencersScreen extends StatelessWidget {
+  final InfluencerViewmodel _viewModel = Get.put(InfluencerViewmodel());
+
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            _buildFilters(),
-            Expanded(
-              child: _buildUserDataTable(),
+      body: SafeArea(
+        child: Obx(() {
+          if (_viewModel.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (_viewModel.error.value.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${_viewModel.error.value}'),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _viewModel.fetchUsers,
+                    child: Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(isMobile),
+                Expanded(
+                  child: _buildUserDataTable(isMobile, _viewModel.influencers),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isMobile) {
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Users", 
-            style: TextStyle(
-              fontSize: 22, 
-              fontWeight: FontWeight.bold
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Users",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search users...",
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onChanged: (value) {
+                      // Implement search functionality if needed
+                    },
+                  ),
+                )
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Influencers",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  width: 300,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search users...",
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onChanged: (value) {
+                      // Implement search functionality if needed
+                    },
+                  ),
+                )
+              ],
             ),
-          ),
-          Container(
-            width: 300,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search users...",
-                border: InputBorder.none,
-                prefixIcon: Icon(Icons.search),
-                contentPadding: EdgeInsets.symmetric(vertical: 10),
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 
-  Widget _buildFilters() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Wrap(
-        spacing: 10,
-        children: [
-          Chip(label: Text("Role: All")),
-          Chip(label: Text("Active Users")),
-          Chip(label: Text("Verified")),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUserDataTable() {
+  Widget _buildUserDataTable(bool isMobile, List<InfluencerModel> influencers) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Padding(
@@ -87,62 +133,47 @@ class UsersInfluencersScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minWidth: constraints.maxWidth - 32, // Account for padding
+                    minWidth: isMobile
+                        ? constraints.maxWidth
+                        : constraints.maxWidth - 32,
                   ),
                   child: DataTable(
-                    columnSpacing: 24,
+                    columnSpacing: 16,
                     dataRowHeight: 64,
                     headingRowHeight: 56,
                     horizontalMargin: 16,
                     dividerThickness: 1,
-                    showCheckboxColumn: true,
+                    showCheckboxColumn: !isMobile,
                     columns: [
-                      DataColumn(label: _buildHeaderCell("ID")),
+                      if (!isMobile) DataColumn(label: _buildHeaderCell("ID")),
                       DataColumn(label: _buildHeaderCell("Name")),
-                      DataColumn(label: _buildHeaderCell("Email")),
+                      if (!isMobile)
+                        DataColumn(label: _buildHeaderCell("Email")),
                       DataColumn(label: _buildHeaderCell("Role")),
-                      DataColumn(label: _buildHeaderCell("Status")),
+                      // DataColumn(label: _buildHeaderCell("Followers")),
                       DataColumn(label: _buildHeaderCell("Action")),
                     ],
-                    rows: List.generate(
-                      10,
-                      (index) => DataRow(
-                        cells: [
-                          DataCell(_buildDataCell("${1000 + index}")),
-                          DataCell(_buildDataCell("User $index")),
-                          DataCell(_buildDataCell("user$index@example.com")),
-                          DataCell(_buildDataCell(index % 2 == 0 ? "Admin" : "User")),
-                          DataCell(
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: index % 3 == 0 
-                                  ? Colors.green[100] 
-                                  : Colors.blue[100],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                index % 3 == 0 ? "Active" : "Pending",
-                                style: TextStyle(
-                                  color: index % 3 == 0 
-                                    ? Colors.green[800] 
-                                    : Colors.blue[800],
-                                ),
-                              ),
-                            ),
+                    rows: influencers.map((influencer) => DataRow(
+                      cells: [
+                        if (!isMobile)
+                          DataCell(_buildDataCell(influencer.id.toString() ?? 'N/A')),
+                        DataCell(_buildDataCell(influencer.name ?? 'Unknown')),
+                        if (!isMobile)
+                          DataCell(_buildDataCell(influencer.email ?? 'N/A')),
+                        DataCell(_buildDataCell(
+                            influencer.role??"user" )),
+                        // DataCell(_buildDataCell(
+                        //     influencer.followers?.toString() ?? '0')),
+                        DataCell(
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              _showDeleteDialog(influencer);
+                            },
                           ),
-                          DataCell(
-                            IconButton(
-                              icon: Icon(Icons.more_vert),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ],
-                        onSelectChanged: (selected) {
-                          // Handle row selection
-                        },
-                      ),
-                    ),
+                        ),
+                      ],
+                    )).toList(),
                     dataRowColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.selected)) {
@@ -164,6 +195,27 @@ class UsersInfluencersScreen extends StatelessWidget {
     );
   }
 
+  void _showDeleteDialog(InfluencerModel influencer) {
+    Get.defaultDialog(
+      title: 'Delete User',
+      content: Text('Are you sure you want to delete ${influencer.name}?'),
+      confirm: ElevatedButton(
+        onPressed: () {
+          // Call delete API here
+          
+          Get.back();
+          Get.snackbar('Success', 'User deleted successfully');
+        },
+        child: Text('Delete'),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(),
+        child: Text('Cancel'),
+      ),
+    );
+  }
+
   Widget _buildHeaderCell(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
@@ -173,6 +225,7 @@ class UsersInfluencersScreen extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Colors.black87,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -180,7 +233,10 @@ class UsersInfluencersScreen extends StatelessWidget {
   Widget _buildDataCell(String text) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
-      child: Text(text),
+      child: Text(
+        text,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }

@@ -1,32 +1,27 @@
 class RouteName {
   static const String splashScreen = '/splashScreen';
-  static const String onboardScreen = '/Onboard';
+  static const String productDetailsScreen = '/ProductDetailsScreen';
   static const String onboard2 = '/OnboardTwo';
-  static const String login = '/LoginPage';
+static const String checkoutScreen = '/CheckoutScreen';
+static const String cartScreen = '/CartScreen';
+static const String groupChatScreen = '/GroupChatScreen';
+static const String homeScreen = '/HomeScreen';
+static const String dashboardScreen = '/DashboardScreen';
+static const String oTPScreen = '/OTPScreen';
+
+static const String uploadVideo = '/UploadVideo';
+// static const String groupChatScreen = '/GroupChatScreen';
+static const String influencerProfile = '/InfluencerProfile';
+
+static const String notificationScreen = '/NotificationScreen';
+static const String searchScreen = '/SearchScreen';
 
 
-  static const String editPost = '/EditPost';
+static const String viewAllInfluencersScreen = '/ViewAllInfluencersScreen';
+static const String viewAllProductsScreen = '/ViewAllProductsScreen';
+static const String viewAllCliquesScreen = '/ViewAllCliqueScreen';
 
-  static const String brandGuidelinesTwo = '/BrandGuidelinesTwo';
-
-
-
-  static const String brandGuidelinesThree = '/brandGuidelinesThree';
-
-  static const String   teamStatsScreen = '/TeamStatsScreen';
-
-  static const String   inviteTeam = '/InviteTeam';
-
-  static const String notificationScreen = '/NotificationScreen';
-  static const String brandGuidelinesFour = '/BrandGuidelinesFour';
-  static const String connectSocials = '/ConnectSocials';
-  static const String bottomNavigation = '/BottomNavigation';
-
-  static const String setPermissions = '/SetPermissions';
-
-  static const String subscriptionStarterPlan = '/SubscriptionStarterPlan';
-  static const String addOnFeatureScreen = '/AddOnFeatureScreen';
-  static const String businessHoursScreen = '/BusinessHoursScreen';
-
+static const String signupScreen = '/SignupScreen';
+static const String loginScreen = '/LoginScreen';
 
 }
