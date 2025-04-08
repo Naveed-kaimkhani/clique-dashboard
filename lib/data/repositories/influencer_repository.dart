@@ -83,6 +83,8 @@ class InfluencerRepository {
   }
 
   Future<List<InfluencerModel>> fetchInfluencers() async {
+    log("Fetching influencers from: $url");
+    log("Auth token: ${userController.token.value}");
     final response = await apiClient.getInfluencersApi(
         url: url,
         authToken: userController.token.value,

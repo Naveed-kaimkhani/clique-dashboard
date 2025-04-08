@@ -7,9 +7,6 @@ import 'package:post_krakren_dashboard/data/repositories/group_repository.dart';
 import 'package:post_krakren_dashboard/data/repositories/influencer_repository.dart';
 import 'package:post_krakren_dashboard/routes/app_routes.dart';
 import 'package:post_krakren_dashboard/view/auth/login.dart';
-import 'package:post_krakren_dashboard/view/auth/otp_screen.dart';
-import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
-import 'package:post_krakren_dashboard/view/navigation_bar.dart';
 void main() {
   
    Get.lazyPut(()=>AuthRepository());

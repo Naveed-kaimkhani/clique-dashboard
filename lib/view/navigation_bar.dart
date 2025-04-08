@@ -19,18 +19,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _screens = [
     DashboardHome(),
-    // const ConnectSocials(),
     UsersInfluencersScreen(),
-// ProfileScreen(),
     ProductPage(),
     VideosApprovalScreen(),
     ChatList(),
     const CalendarScreen(),
     const ChatScreen(),
     const SettingsScreen(),
-    // const PostScreen(),
-    // const AccountsScreen(),
-    // const HelpScreen(),
   ];
 
   @override

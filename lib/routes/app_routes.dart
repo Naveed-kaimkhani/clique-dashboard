@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/constants/app_routes.dart';
 import 'package:post_krakren_dashboard/view/auth/otp_screen.dart';
+import 'package:post_krakren_dashboard/view/chat_screens/create_group_screen.dart';
 import 'package:post_krakren_dashboard/view/navigation_bar.dart';
 import 'package:post_krakren_dashboard/view/splash_screen.dart';
 
@@ -21,6 +22,12 @@ class AppRoutes {
         GetPage(
             name: RouteName.oTPScreen,
             page: () =>  OtpScreen(),
+            transition: Transition.cupertino),
+            
+
+        GetPage(
+            name: RouteName.createGroupPage,
+            page: () =>  CreateGroupPage(),
             transition: Transition.cupertino),
       
       ];

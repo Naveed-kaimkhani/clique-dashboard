@@ -80,6 +80,7 @@ class OtpScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     ElevatedButton(
+                    
                       onPressed: () {
                         final otp = currentOtp.value;
                         if (otp.length == 6) {
@@ -93,7 +94,7 @@ class OtpScreen extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.black,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 14),
                         shape: RoundedRectangleBorder(
@@ -103,7 +104,7 @@ class OtpScreen extends StatelessWidget {
                       child: const Text(
                         "Verify",
                         style:
-                            TextStyle(fontSize: 16, color: AppColors.appColor),
+                            TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ],

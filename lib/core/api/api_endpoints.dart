@@ -14,6 +14,8 @@ class ApiEndpoints {
   // https://dev.moutfits.com/api/v1/user
 
   static const String sendMessage = "https://269435d754e8fd97.api-us.cometchat.io/v3/messages";
+  
+  static const String createGroupApi = "https://269435d754e8fd97.api-us.cometchat.io/v3/groups";
  static const String getGroupMembers = "$baseUrl/cometchat/groups";
  static String groupMessages(String groupId) =>
       "$baseUrl/cometchat/groups/$groupId/messages";

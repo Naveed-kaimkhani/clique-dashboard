@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:post_krakren_dashboard/constants/app_routes.dart';
 import 'package:post_krakren_dashboard/data/model/group_model.dart';
 import 'package:post_krakren_dashboard/view/chat_screens/chat_screen.dart';
 import 'package:post_krakren_dashboard/view_model/discover_viewmodel.dart';
@@ -19,8 +20,29 @@ class ChatList extends StatelessWidget {
         elevation: 0,
         title: Text(
           'Groups',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        actions: [Padding(
+  padding: const EdgeInsets.only(right: 10.0),
+  child: MouseRegion(
+    cursor: SystemMouseCursors.click, // 👈 changes cursor to finger on hover
+    child: GestureDetector(
+      onTap: () {
+        Get.toNamed(RouteName.createGroupPage); // Navigate to Create Group Screen
+      },
+      child: Text(
+        '+ Create Group',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
+)
+
+        ],
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
       ),

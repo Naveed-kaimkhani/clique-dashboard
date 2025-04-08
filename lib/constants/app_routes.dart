@@ -14,6 +14,8 @@ static const String uploadVideo = '/UploadVideo';
 static const String influencerProfile = '/InfluencerProfile';
 
 static const String notificationScreen = '/NotificationScreen';
+
+static const String createGroupPage = '/CreateGroupPage';
 static const String searchScreen = '/SearchScreen';
 
 
