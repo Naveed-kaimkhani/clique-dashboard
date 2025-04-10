@@ -54,14 +54,6 @@ class InfluencerRepository {
         final String? coverPhotoUrl = responseData["user"]["cover_photo_url"];
         final String email = responseData["user"]["email"];
 
-        // Print or use the extracted values
-        // print("Token: $token");
-        print("User Name: $userName");
-        print("User ID: $userId");
-        print("Role: $role");
-        print("Profile Image: $profileImage");
-        print("Cover Photo URL: $coverPhotoUrl");
-        print("Email: $email");
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userName', userName);
@@ -83,15 +75,14 @@ class InfluencerRepository {
   }
 
   Future<List<InfluencerModel>> fetchInfluencers() async {
-    log("Fetching influencers from: $url");
-    log("Auth token: ${userController.token.value}");
+
     final response = await apiClient.getInfluencersApi(
         url: url,
         authToken: userController.token.value,
         params: {
           "role": "influencer",
         });
-    log(response.body.toString());
+    // log(response.body.toString());
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
       List<InfluencerModel> users =

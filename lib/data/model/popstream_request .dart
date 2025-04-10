@@ -6,8 +6,8 @@ class PopstreamRequest {
   final String status;
   final String? name;
   final String showType;
-  final String thumbnailUrl;
-  final String videoUrl;
+  final String? thumbnailUrl;
+  final String? videoUrl;
   final String createdAt;
 
   PopstreamRequest({

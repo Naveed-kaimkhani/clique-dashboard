@@ -1,19 +1,21 @@
 // repositories/popstream_repository.dart
 import 'dart:developer';
-
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:post_krakren_dashboard/controllers/user_controller.dart';
 import 'package:post_krakren_dashboard/data/model/popstream_request%20.dart';
 import 'dart:convert';
 
 class PopstreamRepository {
   final String baseUrl = 'https://dev.moutfits.com/api/v1';
 
+  final UserController controller = Get.find<UserController>();
   Future<List<PopstreamRequest>> fetchRequests() async {
     final response = await http.get(
       Uri.parse('$baseUrl/popstream/requests'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
+        'Authorization': 'Bearer ${controller.token.value}',
      
         // 'Authorization': 'Bearer $token',
       },
@@ -29,25 +31,6 @@ class PopstreamRepository {
     }
   }
 
-  // Future<void> approveRequest(int id) async {
-  //   log("approved request id: $id");
-  //   final response = await http.post(
-  //     Uri.parse('$baseUrl/popstream/approve/$id'),
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Authorization': 'Bearer 353|5mRTVQaa7G01kLanrbABWtvsACwu0W7CO391h1wP29163da9',
-  //     },
-  //   );
-  //   log("kyaa issueee hyyyy ytrrrrr krna approve");
-  // log(response.body);
-  // log(response.statusCode.toString());
-  //   if (response.statusCode != 200) {
-  //     throw Exception('Failed to approve request');
-  //   }else{
-  //     log('Request approved successfully');
-  //   }
-  // }
-
   Future<void> approveRequest(int id) async {
   try {
     log("Approving request with ID: $id");
@@ -56,7 +39,7 @@ class PopstreamRepository {
       Uri.parse('$baseUrl/popstream/approve/$id'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
+        'Authorization': 'Bearer ${controller.token.value}',
       },
     );
     log(response.toString());
@@ -81,7 +64,7 @@ class PopstreamRepository {
       Uri.parse('$baseUrl/popstream/reject/$id'),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer 354|stVo6Vr98AbMaGaHroUY6KoWLvex37ntiYZJQTDr358b3be1',
+        'Authorization': 'Bearer ${controller.token.value}',
       },
     );
 

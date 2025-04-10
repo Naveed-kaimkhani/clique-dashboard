@@ -221,13 +221,19 @@ Widget _buildNetworkImage(String thumbnailUrl) {
   Stack(
                     alignment: Alignment.center,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: _buildNetworkImage(request.thumbnailUrl),
-                        ),
-                      ),
+                   ClipRRect(
+  borderRadius: BorderRadius.circular(8),
+  child: AspectRatio(
+    aspectRatio: 16 / 9,
+    child: request.thumbnailUrl != null && request.thumbnailUrl!.isNotEmpty
+        ? _buildNetworkImage(request.thumbnailUrl!)
+        : Container(
+            color: Colors.grey[200],
+            child: Icon(Icons.broken_image),
+          ),
+  ),
+),
+
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.4),
@@ -238,7 +244,16 @@ Widget _buildNetworkImage(String thumbnailUrl) {
                           icon: Icon(Icons.play_arrow, color: Colors.white,size: 40,),
                           // Icons.play_arrow,
                           color: Colors.white,
-                          onPressed: () => _showVideoPopup(context, request.videoUrl),
+                          onPressed: () {
+                            if (request.videoUrl != null && request.videoUrl!.isNotEmpty) {
+                              _showVideoPopup(context, request.videoUrl!);
+                            } else {
+                              // Handle the case when videoUrl is null or empty
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('No video available')),
+                              );
+                            }
+                          }
                         ),
                       ),
                     ],

@@ -23,9 +23,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ProductPage(),
     VideosApprovalScreen(),
     ChatList(),
-    const CalendarScreen(),
-    const ChatScreen(),
-    const SettingsScreen(),
+    // const CalendarScreen(),
+    // const ChatScreen(),
+    // const SettingsScreen(),
   ];
 
   @override
@@ -65,9 +65,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _drawerItem(Icons.calendar_today, "Product Details", 2),
         _drawerItem(Icons.chat, "Videos Decision", 3),
         _drawerItem(Icons.settings, "Annoucements", 4),
-        _drawerItem(Icons.post_add, "Settings", 5),
-        _drawerItem(Icons.account_circle, "Revenue", 6),
-        _drawerItem(Icons.help, "Accounts Management", 7),
+        // _drawerItem(Icons.post_add, "Settings", 5),
+        // _drawerItem(Icons.account_circle, "Revenue", 6),
+        // _drawerItem(Icons.help, "Accounts Management", 7),
       ],
     );
   }

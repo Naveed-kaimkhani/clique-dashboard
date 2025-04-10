@@ -8,6 +8,7 @@ class ProductViewModel extends GetxController {
   
   var products = <ProductModel>[].obs;
   var isLoading = true.obs;
+   var updatePriceLoading = false.obs;
   var error = ''.obs;
   var currentPage = 1.obs;
   var totalPages = 1.obs;
@@ -17,7 +18,19 @@ class ProductViewModel extends GetxController {
     fetchProducts();
     super.onInit();
   }
+  Future<bool> updatePrice(double percentage) async {
+    updatePriceLoading.value = true;
+    error.value = '';
 
+    final success = await _productRepository.updatePricePercentage(percentage);
+
+    updatePriceLoading.value = false;
+    if (!success) {
+      error.value = 'Failed to update price';
+    }
+updatePriceLoading.value = false;
+    return success;
+  }
   Future<void> fetchProducts() async {
     try {
       isLoading(true);

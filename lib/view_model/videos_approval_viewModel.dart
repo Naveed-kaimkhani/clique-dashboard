@@ -44,19 +44,35 @@ class VideosApprovalViewModel extends GetxController {
     }
   }
 
+  // Future<void> rejectRequest(int id) async {
+  //   try {
+  //     await _repository.rejectRequest(id);
+  //     final index = requests.indexWhere((request) => request.id == id);
+  //     if (index != -1) {
+  //       requests[index] = requests[index].copyWith(status: 'rejected');
+  //     }
+  //     Get.snackbar('Success', 'Request rejected successfully',
+  //         snackPosition: SnackPosition.BOTTOM);
+  //         fetchRequests();
+  //   } catch (e) {
+  //     Get.snackbar('Error', 'Failed to reject request',
+  //         snackPosition: SnackPosition.BOTTOM);
+  //   }
+  // }
   Future<void> rejectRequest(int id) async {
-    try {
-      await _repository.rejectRequest(id);
-      final index = requests.indexWhere((request) => request.id == id);
-      if (index != -1) {
-        requests[index] = requests[index].copyWith(status: 'rejected');
-      }
-      Get.snackbar('Success', 'Request rejected successfully',
-          snackPosition: SnackPosition.BOTTOM);
-          fetchRequests();
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to reject request',
-          snackPosition: SnackPosition.BOTTOM);
+  try {
+    await _repository.rejectRequest(id);
+    final index = requests.indexWhere((request) => request.id == id);
+    if (index != -1) {
+      requests.removeAt(index); // <-- Remove the request from the list
     }
+    Get.snackbar('Success', 'Request rejected successfully',
+        snackPosition: SnackPosition.BOTTOM);
+    fetchRequests(); // Optional: refresh list from server
+  } catch (e) {
+    Get.snackbar('Error', 'Failed to reject request',
+        snackPosition: SnackPosition.BOTTOM);
   }
+}
+
 }

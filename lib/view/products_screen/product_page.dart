@@ -68,10 +68,29 @@ class ProductPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GradientText(
-            "All Products",
-            gradient: AppColors.appGradientColors,
-            fontSize: 22,
+          Row(
+            children: [
+              GradientText(
+                "All Products",
+                gradient: AppColors.appGradientColors,
+                fontSize: 22,
+              ),
+              
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: TextButton(
+                  child: Text(
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    "Apply Price Increment",
+                  ),
+                  onPressed:()=> showEditPriceDialog(context), 
+                ),
+              )
+            ],
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
@@ -93,4 +112,213 @@ class ProductPage extends StatelessWidget {
       ),
     );
   }
+  
+
+void showEditPriceDialog(BuildContext context) {
+  final TextEditingController controller =
+      TextEditingController(text: '15');
+  final FocusNode focusNode = FocusNode();
+
+  // Animation controller would be better, but for simplicity using Tween
+  final double initialScale = 0.8;
+  final double targetScale = 1.0;
+
+  Get.defaultDialog(
+    title: '',
+    titlePadding: EdgeInsets.zero,
+    contentPadding: const EdgeInsets.all(24),
+    backgroundColor: Colors.white,
+    barrierDismissible: false,
+    radius: 16,
+    content: AnimatedScale(
+      scale: targetScale,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutBack,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              spreadRadius: 5,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header with gradient
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: AppColors.appGradientColors,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+              ),
+              child: const Text(
+                'Apply Price Increment',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  // Animated text field
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: focusNode.hasFocus
+                          ? [
+                              BoxShadow(
+                                color: Colors.blue.withOpacity(0.2),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        labelText: 'Percentage',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: AppColors.black,
+                            width: 2,
+                          ),
+                        ),
+                        suffixText: '%',
+                        suffixStyle: const TextStyle(
+                          color:AppColors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // Buttons row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Obx(() {
+                          return _productViewModel.updatePriceLoading.value
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.appColor),
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () async {
+                                    final percentage =
+                                        double.tryParse(controller.text);
+                                    if (percentage == null) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Invalid percentage',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: Colors.red.shade600,
+                                        colorText: Colors.white,
+                                      );
+                                      return;
+                                    }
+
+                                    final success = await _productViewModel
+                                        .updatePrice(percentage);
+                                    if (success) {
+                                      Get.back();
+                                      Get.snackbar(
+                                        'Success',
+                                        'Price updated successfully',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: Colors.green.shade600,
+                                        colorText: Colors.white,
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    elevation: 3,
+                                    shadowColor: Colors.blue.shade200,
+                                  ),
+                                  child: const Text(
+                                    'UPDATE',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                );
+                        }),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Get.back(),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey.shade100,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'CANCEL',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  // Auto-focus the text field
+  Future.delayed(const Duration(milliseconds: 300), () {
+    focusNode.requestFocus();
+  });
+}
 }
