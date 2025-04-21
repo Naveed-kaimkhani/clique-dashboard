@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:post_krakren_dashboard/controllers/user_controller.dart';
@@ -8,12 +7,12 @@ import 'package:post_krakren_dashboard/core/api/api_endpoints.dart';
 import 'package:post_krakren_dashboard/models/product.dart';
 
 class ProductRepository {
-  final String baseUrl = 'https://dev.moutfits.com/api/v1/topdawg/products';
+  final String baseUrl = 'https://cactisocial.com/api-clique/public/api/v1/topdawg/products';
 
   final userController = Get.find<UserController>();
 Future<List<ProductModel>> fetchProducts({
   int page = 1,
-  int perPage = 100,
+  int perPage = 800,
 }) async {
   final response = await http.get(
     Uri.parse('$baseUrl?page=$page&per_page=$perPage'),

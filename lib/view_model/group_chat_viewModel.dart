@@ -51,7 +51,7 @@ class GroupChatViewModel extends GetxController {
     try {
       final response = await ApiClient.getMessages(
         url:
-            "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages?limit=20",
+            "https://cactisocial.com/api-clique/public/api/v1/cometchat/groups/$groupId/messages?limit=20",
         headers: {"Authorization": "Bearer $token"},
       );
       log(response.body);
@@ -89,7 +89,7 @@ class GroupChatViewModel extends GetxController {
     }
     try {
       String apiUrl =
-          "https://dev.moutfits.com/api/v1/cometchat/groups/$groupId/messages";
+          "https://cactisocial.com/api-clique/public/api/v1/cometchat/groups/$groupId/messages";
 
       if (loadMore && _messages.isNotEmpty) {
         // Fetch older messages with timestamp parameter and limit of 200

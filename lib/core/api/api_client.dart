@@ -21,25 +21,12 @@ class ApiClient extends GetxService {
     return await http.post(Uri.parse(url),headers: headers, body: body);
   }
 
-//    Future<http.Response> verifyOtp({
-//     required String url,
-//     // Map<String, String>? headers,
-//     Object? body,
-//   }) async {
-//     return await http.post(Uri.parse('https://dev.moutfits.com/api/v1/otp/verify'),
-//      body: jsonEncode({
-//   "phone": "3103443527",
-//   "otp": "123456"
-//  }),
-// );
-//   }
-
    Future<http.Response> verifyOtp({
     required String url,
     Map<String, String>? headers,
     Object? body,
   }) async {
-    return await http.post(Uri.parse('https://dev.moutfits.com/api/v1/otp/verify'),
+    return await http.post(Uri.parse('https://cactisocial.com/api-clique/public/api/v1/otp/verify'),
      body: body,
      headers: headers,
 );
@@ -50,7 +37,7 @@ class ApiClient extends GetxService {
     Map<String, String>? headers,
     Object? body,
   }) async {
-    return await http.post(Uri.parse('https://dev.moutfits.com/api/v1/login'),
+    return await http.post(Uri.parse('https://cactisocial.com/api-clique/public/api/v1/login'),
      body: body,
      headers: headers,
 );
@@ -60,7 +47,7 @@ class ApiClient extends GetxService {
     Map<String, String>? headers,
     Object? body,
   }) async {
-    return await http.post(Uri.parse("https://dev.moutfits.com/api/v1/otp/send"),
+    return await http.post(Uri.parse("https://cactisocial.com/api-clique/public/api/v1/otp/send"),
      body: body,
      headers: headers,
 );

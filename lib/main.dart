@@ -18,10 +18,6 @@ void main() {
    
    Get.lazyPut(()=>InfluencerRepository());
   runApp(
-      //  DevicePreview(
-      //   enabled: !kReleaseMode,
-      //   builder: (context) => MyApp(),
-      // ),
       MyApp()
     );
 }
