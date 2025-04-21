@@ -97,6 +97,7 @@ class AuthRepository {
           body: jsonEncode({
             "email": email,
           }));
+          log(response.body);
       log(email);
       log(response.statusCode.toString());
       log(response.body.toString());

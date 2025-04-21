@@ -201,7 +201,6 @@ class UsersInfluencersScreen extends StatelessWidget {
       content: Text('Are you sure you want to delete ${influencer.name}?'),
       confirm: ElevatedButton(
         onPressed: () {
-          // Call delete API here
           
           Get.back();
           Get.snackbar('Success', 'User deleted successfully');

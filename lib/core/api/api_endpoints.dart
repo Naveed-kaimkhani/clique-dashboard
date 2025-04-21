@@ -9,9 +9,6 @@ class ApiEndpoints {
   static const String joinGroup = "$baseUrl/cometchat/groups/join";
   static const String getGroups = "$baseUrl/cometchat/groups";
   static const String getInfluencers = "$baseUrl/user";
-  // static const String sendMessage = "$baseUrl/cometchat/groups/send-message";
-  // https://269435d754e8fd97.api-us.cometchat.io/v3/messages
-  // https://dev.moutfits.com/api/v1/user
 
   static const String sendMessage = "https://269435d754e8fd97.api-us.cometchat.io/v3/messages";
   
