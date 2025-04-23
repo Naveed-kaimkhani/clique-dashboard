@@ -58,6 +58,41 @@ class PopstreamController extends GetxController {
       return storedToken;
     }
   }
+
+  Future<void> deletePopstream(String id) async {
+  final String lambdaToken = userController.revoLamdaToken.value;
+  final authToken = await getValidAccessToken();
+  if (authToken == null) return;
+
+  isLoading.value = true;
+  try {
+    final response = await GetConnect().post(
+      'https://clique.revovideo.net/api/popstream/delete-popstream?language=en',
+      {
+        "id": id,
+        "group_id": "clique",
+        "lambda_token": lambdaToken,
+      },
+      headers: {
+        "Authorization": "Bearer $authToken",
+        "Content-Type": "application/json",
+      },
+    );
+log(response.statusCode.toString());
+    if (response.statusCode == 200 ) {
+      Get.snackbar("Success", "Popstream deleted successfully");
+      fetchPopstreams(); // Refresh the list
+    } else {
+      // Get.snackbar("Error", response.body['message'] ?? "Failed to delete popstream");
+    }
+  } catch (e) {
+    log(e.toString());
+    // Get.snackbar("Error", "An error occurred while deleting: $e");
+  } finally {
+    isLoading.value = false;
+  }
+}
+
   Future<void> fetchPopstreams() async {
     final String lamdaToken = userController.revoLamdaToken.value;
 

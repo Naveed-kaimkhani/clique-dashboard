@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:post_krakren_dashboard/core/api/api_client.dart';
 import 'package:post_krakren_dashboard/data/repositories/auth_repo.dart';
 import 'package:post_krakren_dashboard/data/repositories/group_repository.dart';
@@ -9,6 +10,9 @@ import 'package:post_krakren_dashboard/routes/app_routes.dart';
 import 'package:post_krakren_dashboard/view/auth/login.dart';
 void main() {
   
+  WidgetsFlutterBinding.ensureInitialized();
+  // Necessary initialization for package:media_kit.
+  MediaKit.ensureInitialized();
    Get.lazyPut(()=>AuthRepository());
    
    Get.put(ApiClient());

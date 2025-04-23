@@ -273,8 +273,8 @@ class RequestCard extends StatelessWidget {
                     color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 28),
-                // _buildButtonRow(isSmallScreen),
+                const SizedBox(height: 18),
+                _buildButtonRow(isSmallScreen,request.id),
               ],
             ),
           ),
@@ -289,32 +289,32 @@ log("video url");
 log(videoUrl);
     showDialog(
       context: context,
-      builder: (context) => VideoPopup(videoUrl: videoUrl),
+      builder: (context) => VideoPlayerScreen(videoUrl: videoUrl),
       barrierColor: Colors.black87,
     );
   }
 
-  Widget _buildButtonRow(bool isSmallScreen) {
-    // final isPending = request.status == 'pending';
+Widget _buildButtonRow(bool isSmallScreen, String popstreamId) {
+  final popstreamController = Get.find<PopstreamController>();
 
-    return SizedBox(
-      height: isSmallScreen ? 80 : 36,
-      child:  Column(
-              children: [
-                _buildActionButton(
-                  icon: Icons.check,
-                  label:"Delete Popstream",
-                  color: AppColors.approveButtonColor ,
-                  onPressed: null,
-                  isSmallScreen: isSmallScreen,
-                ),
-                const SizedBox(height: 8),
-              
-              ],
-            )
-          
-    );
-  }
+  return SizedBox(
+    height: 80,
+    child: Column(
+      children: [
+        Obx(() => _buildActionButton(
+              icon: Icons.delete,
+              label: popstreamController.isLoading.value ? "Deleting..." : "Delete Popstream",
+              color: AppColors.appColor,
+              onPressed: popstreamController.isLoading.value
+                  ? null
+                  : () => popstreamController.deletePopstream(popstreamId),
+              isSmallScreen: isSmallScreen,
+            )),
+        const SizedBox(height: 8),
+      ],
+    ),
+  );
+}
 
   Widget _buildActionButton({
     required IconData icon,

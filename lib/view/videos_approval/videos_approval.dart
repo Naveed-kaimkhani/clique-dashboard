@@ -210,14 +210,6 @@ class RequestCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-//            ClipRRect(
-//   borderRadius: BorderRadius.circular(8),
-//   child: AspectRatio(
-//     aspectRatio: 16 / 9,
-//     child: _buildNetworkImage(request.thumbnailUrl),
-//   ),
-// ),
-
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -291,12 +283,13 @@ class RequestCard extends StatelessWidget {
   }
 
   void _showVideoPopup(BuildContext context, String videoUrl) {
+    log("in show video popup");
     final fullVideoUrl = 'https://cactisocial.com/api-clique$videoUrl';
-
+log(fullVideoUrl);
     showDialog(
       context: context,
       // builder: (context) => VideoPopupPlayer(videoUrl: fullVideoUrl),
-        builder: (context) => VideoPopup(videoUrl: fullVideoUrl),
+        builder: (context) => VideoPlayerScreen(videoUrl: fullVideoUrl),
       barrierColor: Colors.black87,
     );
   }

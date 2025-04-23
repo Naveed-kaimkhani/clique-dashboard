@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:post_krakren_dashboard/components/auth_button.dart';
 import 'package:post_krakren_dashboard/constants/app_routes.dart';
 import 'package:post_krakren_dashboard/data/model/signup_params.dart';
@@ -13,7 +14,22 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   // final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+    RegExp emailRegex =
+      RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+  bool validateFields() {
+    if (_emailController.text.isEmpty) {
+      Utils.showCustomSnackBar(
+          'Email Required', 'Please enter your email', ContentType.warning);
+      return false;
+    }
 
+    if (!emailRegex.hasMatch(_emailController.text)) {
+      Utils.showCustomSnackBar('Invalid Email',
+          'Please enter a valid email address', ContentType.failure);
+      return false;
+    }
+    return true;
+  }
   final OTPViewModel otpViewModel = Get.put(OTPViewModel());
   @override
   Widget build(BuildContext context) {
@@ -93,14 +109,14 @@ class LoginScreen extends StatelessWidget {
                   buttonText: 'Login',
                   isLoading: otpViewModel.isLoading,
                   onPressed: () async {
-                    if (true) {
+                    if (validateFields()) {
                       otpViewModel.isLoading.value = true;
 
                       final SignupParams request = SignupParams(
                         name: "",
-                        email:"cliqueforappledemo@gmail.com",
+                        // email:"cliqueforappledemo@gmail.com",
 
-                        // email: _emailController.text,
+                        email: _emailController.text,
                         phone: "",
                         role: "",
                       );
