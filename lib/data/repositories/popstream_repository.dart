@@ -7,29 +7,62 @@ import 'package:post_krakren_dashboard/data/model/popstream_request%20.dart';
 import 'dart:convert';
 
 class PopstreamRepository {
-  final String baseUrl = 'https://dev.moutfits.com/api/v1';
+  final String baseUrl = 'https://cactisocial.com/api-clique/public/api/v1';
 
   final UserController controller = Get.find<UserController>();
-  Future<List<PopstreamRequest>> fetchRequests() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/popstream/requests'),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${controller.token.value}',
+  // Future<List<PopstreamRequest>> fetchRequests() async {
+  //   final response = await http.get(
+  //     Uri.parse('$baseUrl/popstream/requests'),
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Authorization': 'Bearer ${controller.token.value}',
      
-        // 'Authorization': 'Bearer $token',
-      },
-    );
-    log("Fetching requests from: $baseUrl/popstream/requests");
-    log("Response status code: ${response.statusCode}");
-      log(response.body);
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => PopstreamRequest.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load requests');
+  //       // 'Authorization': 'Bearer $token',
+  //     },
+  //   );
+  //   log("Fetching requests from: $baseUrl/popstream/requests");
+  //   log("Response status code: ${response.statusCode}");
+  //     log(response.body);
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = json.decode(response.body);
+  //     return data.map((json) => PopstreamRequest.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load requests');
+  //   }
+  // }
+  Future<List<PopstreamRequest>> fetchRequests() async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/popstream/requests'),
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${controller.token.value}',
+    },
+  );
+
+  log("Fetching requests from: $baseUrl/popstream/requests");
+  log("Response status code: ${response.statusCode}");
+  log(response.body);
+
+  if (response.statusCode == 200) {
+    final decoded = json.decode(response.body);
+
+    // Check for the specific message and return empty list
+    if (decoded is Map<String, dynamic> &&
+        decoded['message'] == 'No records available for approval or rejection.') {
+      return [];
     }
+
+    // Otherwise, assume it's a list of requests
+    if (decoded is List) {
+      return decoded.map((json) => PopstreamRequest.fromJson(json)).toList();
+    }
+
+    // Unexpected format
+    throw Exception('Unexpected response format');
+  } else {
+    throw Exception('Failed to load requests');
   }
+}
 
   Future<void> approveRequest(int id) async {
   try {

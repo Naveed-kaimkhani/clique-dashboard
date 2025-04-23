@@ -1,8 +1,4 @@
-
-
-
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/gradient_text.dart';
@@ -110,24 +106,30 @@ class VideosApprovalScreen extends StatelessWidget {
           crossAxisCount = 4;
         }
 
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: viewModel.requests.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: _getAspectRatio(screenWidth),
-          ),
-          itemBuilder: (context, index) {
-            return RequestCard(
-              request: viewModel.requests[index],
-              onApprove: () => viewModel.approveRequest(viewModel.requests[index].id),
-              onReject: () => viewModel.rejectRequest(viewModel.requests[index].id),
-            );
-          },
-        );
+        if (viewModel.requests.isEmpty) {
+          return Center(child: Text("No new request available"));
+        } else {
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: viewModel.requests.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: _getAspectRatio(screenWidth),
+            ),
+            itemBuilder: (context, index) {
+              return RequestCard(
+                request: viewModel.requests[index],
+                onApprove: () =>
+                    viewModel.approveRequest(viewModel.requests[index].id),
+                onReject: () =>
+                    viewModel.rejectRequest(viewModel.requests[index].id),
+              );
+            },
+          );
+        }
       },
     );
   }
@@ -151,46 +153,45 @@ class RequestCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-
-Widget _buildNetworkImage(String thumbnailUrl) {
-  final fullUrl = 'https://dev.moutfits.com$thumbnailUrl';
-  log(fullUrl);
-  try {
-    return Image(
-  image: CachedNetworkImageProvider(
-    'https://dev.moutfits.com${request.thumbnailUrl}',
-  
-    headers: {
-      'Accept': 'image/*',
-      // Add any required headers
-    },
-  ),
-  fit: BoxFit.cover,
-  loadingBuilder: (context, child, loadingProgress) {
-    if (loadingProgress == null) return child;
-    return Center(
-      child: CircularProgressIndicator(
-        value: loadingProgress.expectedTotalBytes != null
-            ? loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!
-            : null,
-      ),
-    );
-  },
-  errorBuilder: (context, error, stackTrace) {
-    return Container(
-      color: Colors.grey[200],
-      child: Icon(Icons.error),
-    );
-  },
-);
-  } catch (e) {
-    return Container(
-      color: Colors.grey[200],
-      child: Icon(Icons.broken_image),
-    );
+  Widget _buildNetworkImage(String thumbnailUrl) {
+    final fullUrl = 'https://cactisocial.com$thumbnailUrl';
+    log(fullUrl);
+    try {
+      return Image(
+        image: CachedNetworkImageProvider(
+          'https://cactisocial.com${request.thumbnailUrl}',
+          headers: {
+            'Accept': 'image/*',
+            // Add any required headers
+          },
+        ),
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey[200],
+            child: Icon(Icons.error),
+          );
+        },
+      );
+    } catch (e) {
+      return Container(
+        color: Colors.grey[200],
+        child: Icon(Icons.broken_image),
+      );
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -217,35 +218,39 @@ Widget _buildNetworkImage(String thumbnailUrl) {
 //   ),
 // ),
 
-
-  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                   ClipRRect(
-  borderRadius: BorderRadius.circular(8),
-  child: AspectRatio(
-    aspectRatio: 16 / 9,
-    child: request.thumbnailUrl != null && request.thumbnailUrl!.isNotEmpty
-        ? _buildNetworkImage(request.thumbnailUrl!)
-        : Container(
-            color: Colors.grey[200],
-            child: Icon(Icons.broken_image),
-          ),
-  ),
-),
-
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          shape: BoxShape.circle,
-                        ),
-                        padding: EdgeInsets.all(16),
-                        child: IconButton(
-                          icon: Icon(Icons.play_arrow, color: Colors.white,size: 40,),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: request.thumbnailUrl != null &&
+                                request.thumbnailUrl!.isNotEmpty
+                            ? _buildNetworkImage(request.thumbnailUrl!)
+                            : Container(
+                                color: Colors.grey[200],
+                                child: Icon(Icons.broken_image),
+                              ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.4),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: IconButton(
+                          icon: Icon(
+                            Icons.play_arrow,
+                            color: Colors.white,
+                            size: 40,
+                          ),
                           // Icons.play_arrow,
                           color: Colors.white,
                           onPressed: () {
-                            if (request.videoUrl != null && request.videoUrl!.isNotEmpty) {
+                            if (request.videoUrl != null &&
+                                request.videoUrl!.isNotEmpty) {
                               _showVideoPopup(context, request.videoUrl!);
                             } else {
                               // Handle the case when videoUrl is null or empty
@@ -253,14 +258,13 @@ Widget _buildNetworkImage(String thumbnailUrl) {
                                 SnackBar(content: Text('No video available')),
                               );
                             }
-                          }
-                        ),
-                      ),
-                    ],
-                  ),
+                          }),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 Text(
-                  request.name??"",
+                  request.name ?? "",
                   style: TextStyle(
                     fontSize: isSmallScreen ? 14 : 16,
                     fontWeight: FontWeight.w600,
@@ -285,18 +289,20 @@ Widget _buildNetworkImage(String thumbnailUrl) {
       },
     );
   }
-void _showVideoPopup(BuildContext context, String videoUrl) {
-    final fullVideoUrl = 'https://dev.moutfits.com$videoUrl';
-    
+
+  void _showVideoPopup(BuildContext context, String videoUrl) {
+    final fullVideoUrl = 'https://cactisocial.com$videoUrl';
+
     showDialog(
       context: context,
       builder: (context) => VideoPopupPlayer(videoUrl: fullVideoUrl),
       barrierColor: Colors.black87,
     );
   }
+
   Widget _buildButtonRow(bool isSmallScreen) {
     final isPending = request.status == 'pending';
-    
+
     return SizedBox(
       height: isSmallScreen ? 80 : 36,
       child: isSmallScreen
@@ -305,7 +311,8 @@ void _showVideoPopup(BuildContext context, String videoUrl) {
                 _buildActionButton(
                   icon: Icons.check,
                   label: isPending ? "Approve" : "Approved",
-                  color: isPending ? AppColors.approveButtonColor : Colors.green,
+                  color:
+                      isPending ? AppColors.approveButtonColor : Colors.green,
                   onPressed: isPending ? onApprove : null,
                   isSmallScreen: isSmallScreen,
                 ),
@@ -325,7 +332,8 @@ void _showVideoPopup(BuildContext context, String videoUrl) {
                   child: _buildActionButton(
                     icon: Icons.check,
                     label: isPending ? "Approve" : "Approved",
-                    color: isPending ? AppColors.approveButtonColor : Colors.green,
+                    color:
+                        isPending ? AppColors.approveButtonColor : Colors.green,
                     onPressed: isPending ? onApprove : null,
                     isSmallScreen: isSmallScreen,
                   ),

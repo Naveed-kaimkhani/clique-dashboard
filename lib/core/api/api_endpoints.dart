@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = "https://dev.moutfits.com/api/v1";
+  static const String baseUrl = "https://cactisocial.com/api-clique/public/api/v1";
   static const String register = "$baseUrl/register";
   
   static const String verifyOtp = "$baseUrl/otp/verify";
@@ -17,6 +17,6 @@ class ApiEndpoints {
  static String groupMessages(String groupId) =>
       "$baseUrl/cometchat/groups/$groupId/messages";
 
- static final String updateApi = "https://dev.moutfits.com/api/v1/user/update?_method=PUT";
+ static final String updateApi = "https://cactisocial.com/api-clique/public/api/v1/user/update?_method=PUT";
 //  static const String getGroupMembers = "$baseUrl/cometchat/groups/g2/members";
 }

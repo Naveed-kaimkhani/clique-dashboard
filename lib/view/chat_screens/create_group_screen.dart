@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/constants/app_routes.dart';
@@ -10,18 +9,18 @@ class CreateGroupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar:   AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Get.toNamed(RouteName.dashboardScreen),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.toNamed(RouteName.createGroupPage),
+        ),
+        title: const Text(
+          'Create Group',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      title: const Text(
-        'Create Group',
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
       backgroundColor: Colors.white,
       body: Center(
         child: ConstrainedBox(
@@ -37,28 +36,61 @@ class CreateGroupPage extends StatelessWidget {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
-                  _buildTextField('Group GUID', viewModel.guidController),
-                  _buildTextField('Group Name', viewModel.nameController),
-                  // _buildTextField('Group Type', viewModel.groupTypeController),
-                  // _buildTextField('Password (optional)', viewModel.passwordController, obscureText: true),
+                  Center(
+                    child: const Text('Group Icon',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                  ),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () => viewModel.pickImage(),
+                      child: Obx(() {
+                        return Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: viewModel.selectedImage.value != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.file(
+                                      viewModel.selectedImage.value!,
+                                      fit: BoxFit.cover),
+                                )
+                              : const Icon(Icons.add_a_photo,
+                                  size: 40, color: Colors.grey),
+                        );
+                      }),
+                    ),
+                  ),
                   const SizedBox(height: 20),
-                  const Text('Group Members', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  _buildTextField('Group Name', viewModel.nameController),
+                  const SizedBox(height: 20),
+                  const Text('Group Members',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   _buildMemberSelector(viewModel),
                   const SizedBox(height: 30),
                   Row(
                     children: [
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300),
                         onPressed: () => viewModel.clearAll(),
-                        child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+                        child: const Text('Cancel',
+                            style: TextStyle(color: Colors.black)),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black),
                         onPressed: () {
                           viewModel.createGroupAPI();
                         },
-                        child: const Text('Save', style: TextStyle(color: Colors.white)),
+                        child: const Text('Save',
+                            style: TextStyle(color: Colors.white)),
                       )
                     ],
                   )
@@ -71,7 +103,8 @@ class CreateGroupPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool obscureText = false}) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
@@ -95,44 +128,42 @@ class CreateGroupPage extends StatelessWidget {
     );
   }
 
-Widget _buildMemberSelector(CreateGroupViewModel viewModel) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      DropdownButtonFormField<String>(
-        
-        isExpanded: true,
-        decoration: const InputDecoration(
-          labelText: 'Select Member',
-          border: OutlineInputBorder(),
-          filled: true,
-          fillColor: Colors.white,
+  Widget _buildMemberSelector(CreateGroupViewModel viewModel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButtonFormField<String>(
+          isExpanded: true,
+          decoration: const InputDecoration(
+            labelText: 'Select Member',
+            border: OutlineInputBorder(),
+            filled: true,
+            fillColor: Colors.white,
+          ),
+          items: viewModel.allMembers.map((member) {
+            return DropdownMenuItem<String>(
+              value: member,
+              child: Text(member),
+            );
+          }).toList(),
+          onChanged: (selected) {
+            if (selected != null &&
+                !viewModel.selectedMembers.contains(selected)) {
+              viewModel.selectedMembers.add(selected);
+            }
+          },
         ),
-        items: viewModel.allMembers.map((member) {
-          return DropdownMenuItem<String>(
-            
-            value: member,
-            child: Text(member),
-          );
-        }).toList(),
-        onChanged: (selected) {
-          if (selected != null && !viewModel.selectedMembers.contains(selected)) {
-            viewModel.selectedMembers.add(selected);
-          }
-        },
-      ),
-      const SizedBox(height: 10),
-      Obx(() => Wrap(
-            spacing: 8,
-            children: viewModel.selectedMembers.map((member) {
-              return Chip(
-                label: Text(member),
-                onDeleted: () => viewModel.selectedMembers.remove(member),
-              );
-            }).toList(),
-          )),
-    ],
-  );
-}
-
+        const SizedBox(height: 10),
+        Obx(() => Wrap(
+              spacing: 8,
+              children: viewModel.selectedMembers.map((member) {
+                return Chip(
+                  label: Text(member),
+                  onDeleted: () => viewModel.selectedMembers.remove(member),
+                );
+              }).toList(),
+            )),
+      ],
+    );
+  }
 }

@@ -49,7 +49,7 @@ class GroupRepository {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://dev.moutfits.com/api/v1/cometchat/groups/$guid/members'),
+            'https://cactisocial.com/api-clique/public/api/v1/cometchat/groups/$guid/members'),
         headers: {
           'Authorization':
               'Bearer 1|KBTMkpNQWaqNHTzA49xb4wcd5y4UqzkuABTSk3ES7d35d387',

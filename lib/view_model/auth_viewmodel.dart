@@ -13,27 +13,29 @@ class OTPViewModel extends GetxController {
   final AuthRepository _authRepo = Get.find<AuthRepository>();
   Future<void> verifyOtp(String email, String otp) async {
     isLoading.value = true;
-    OTPRequestModel requestModel = OTPRequestModel(email:email , otp: otp);
+    OTPRequestModel requestModel = OTPRequestModel(email: email, otp: otp);
 
     OTPResponseModel response = await _authRepo.verifyOTP(requestModel);
     otpResponse.value = response.message;
 
     if (response.success) {
-     Utils.showCustomSnackBar("Success",  response.message, ContentType.success);
-      Get.offAllNamed(RouteName.dashboardScreen);
+      Utils.showCustomSnackBar(
+          "Success", response.message, ContentType.success);
+      isLoading.value = false;
+      // Get.offAllNamed(RouteName.dashboardScreen);
+      Get.rootDelegate.toNamed(RouteName.dashboardScreen,);
     } else {
-         Utils.showCustomSnackBar("Error",  response.message, ContentType.failure);
-  
+      isLoading.value = false;
+      Utils.showCustomSnackBar("Error", response.message, ContentType.failure);
     }
-    
+
     isLoading.value = false;
   }
-    Future<int> sendOTP(String phone) async {
-      log("in send otp");
+
+  Future<int> sendOTP(String phone) async {
+    log("in send otp");
     int response = await _authRepo.SendOTP(phone);
 
-  return response;
-    
-    
+    return response;
   }
 }

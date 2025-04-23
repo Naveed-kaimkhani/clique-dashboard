@@ -79,34 +79,38 @@ class OtpScreen extends StatelessWidget {
 
                     const SizedBox(height: 32),
 
-                    ElevatedButton(
-                    
-                      onPressed: () {
-                        final otp = currentOtp.value;
-                        if (otp.length == 6) {
-                          otpViewModel.verifyOtp(signupParams.email, otp);
-                        } else {
-                          Get.snackbar("Invalid OTP",
-                              "Please enter a valid 6-digit OTP.",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.red.shade100,
-                              colorText: Colors.black);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        "Verify",
-                        style:
-                            TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
+                    Obx(() {
+                      return ElevatedButton(
+                          onPressed: () {
+                            final otp = currentOtp.value;
+                            if (otp.length == 6) {
+                              otpViewModel.verifyOtp(signupParams.email, otp);
+                            } else {
+                              Get.snackbar("Invalid OTP",
+                                  "Please enter a valid 6-digit OTP.",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: Colors.red.shade100,
+                                  colorText: Colors.black);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: otpViewModel.isLoading.value
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "Verify",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ));
+                    })
                   ],
                 ),
               ),
