@@ -3,6 +3,7 @@ import 'package:post_krakren_dashboard/view/chat_screens/chat_list.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
 import 'package:post_krakren_dashboard/view/users_influencers/user_influencers_screens.dart';
 import 'package:post_krakren_dashboard/view/products_screen/product_page.dart';
+import 'package:post_krakren_dashboard/view/videos_approval/delete_popstream.dart';
 import 'package:post_krakren_dashboard/view/videos_approval/videos_approval.dart';
 
 import '../components/index.dart';
@@ -22,10 +23,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     UsersInfluencersScreen(),
     ProductPage(),
     VideosApprovalScreen(),
+    DeletePopstream(),
     ChatList(),
-    // const CalendarScreen(),
-    // const ChatScreen(),
-    // const SettingsScreen(),
   ];
 
   @override
@@ -64,10 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _drawerItem(Icons.group, "Users / Influencers", 1),
         _drawerItem(Icons.calendar_today, "Product Details", 2),
         _drawerItem(Icons.chat, "Videos Decision", 3),
-        _drawerItem(Icons.settings, "Annoucements", 4),
-        // _drawerItem(Icons.post_add, "Settings", 5),
-        // _drawerItem(Icons.account_circle, "Revenue", 6),
-        // _drawerItem(Icons.help, "Accounts Management", 7),
+                _drawerItem(Icons.chat, "Approved Popstreams", 4),
+        _drawerItem(Icons.settings, "Cliques", 5),
       ],
     );
   }
@@ -93,108 +90,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// }
 
-class TeamScreen extends StatelessWidget {
-  const TeamScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Users/Influencers", []);
-  }
-}
 
-class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Calendar", []);
-  }
-}
-
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Chat", []);
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Settings", []);
-  }
-}
-
-class PostScreen extends StatelessWidget {
-  const PostScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Post", []);
-  }
-}
-
-class AccountsScreen extends StatelessWidget {
-  const AccountsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Accounts", []);
-  }
-}
-
-class HelpScreen extends StatelessWidget {
-  const HelpScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreenContent("Help", []);
-  }
-}
-
-// Helper function to create screen content
-Widget _buildScreenContent(String title, List<Widget> items) {
-  return Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 20),
-        Expanded(
-          child: items.isNotEmpty
-              ? ListView(children: items)
-              : const Center(child: Text("No content available")),
-        ),
-      ],
-    ),
-  );
-}
-
-// Social Media Connection Tile
-Widget _socialMediaTile(String platform, Color color, bool isConnected) {
-  return Card(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    child: ListTile(
-      leading: CircleAvatar(
-          backgroundColor: color,
-          child: Icon(Icons.check, color: Colors.white)),
-      title: Text(platform),
-      subtitle: Text(isConnected ? "Connected" : "Reconnect"),
-      trailing: isConnected
-          ? TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Disconnect", style: TextStyle(color: Colors.red)),
-            )
-          : null,
-    ),
-  );
-}

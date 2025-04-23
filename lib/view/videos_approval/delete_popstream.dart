@@ -1,15 +1,21 @@
+
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/gradient_text.dart';
 import 'package:post_krakren_dashboard/constants/app_colors.dart';
-import 'package:post_krakren_dashboard/data/model/popstream_request%20.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:post_krakren_dashboard/models/Ppopstream_model.dart';
 import 'package:post_krakren_dashboard/video_popup_player.dart';
-import 'package:post_krakren_dashboard/view_model/videos_approval_viewModel.dart';
+import 'package:post_krakren_dashboard/view_model/popstream_viewmodel.dart';
 
-class VideosApprovalScreen extends StatelessWidget {
-  final VideosApprovalViewModel viewModel = Get.put(VideosApprovalViewModel());
+class DeletePopstream extends StatelessWidget {
+  final PopstreamController viewModel = 
+  Get.isRegistered<PopstreamController>()
+      ? Get.find<PopstreamController>()
+      : Get.put(PopstreamController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +112,13 @@ class VideosApprovalScreen extends StatelessWidget {
           crossAxisCount = 4;
         }
 
-        if (viewModel.requests.isEmpty) {
-          return Center(child: Text("No new request available"));
+        if (viewModel.popstreams.isEmpty) {
+          return Center(child: Text("No popstream available"));
         } else {
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: viewModel.requests.length,
+            itemCount: viewModel.popstreams.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 16,
@@ -121,11 +127,7 @@ class VideosApprovalScreen extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               return RequestCard(
-                request: viewModel.requests[index],
-                onApprove: () =>
-                    viewModel.approveRequest(viewModel.requests[index].id),
-                onReject: () =>
-                    viewModel.rejectRequest(viewModel.requests[index].id),
+                request: viewModel.popstreams[index],
               );
             },
           );
@@ -142,24 +144,22 @@ class VideosApprovalScreen extends StatelessWidget {
 }
 
 class RequestCard extends StatelessWidget {
-  final PopstreamRequest request;
-  final VoidCallback onApprove;
-  final VoidCallback onReject;
+  final PopstreamModel request;
+  // final VoidCallback onApprove;
+  // final VoidCallback onReject;
 
   const RequestCard({
     required this.request,
-    required this.onApprove,
-    required this.onReject,
+    // required this.onApprove,
+    // required this.onReject,
     Key? key,
   }) : super(key: key);
 
   Widget _buildNetworkImage(String thumbnailUrl) {
-    final fullUrl = 'https://cactisocial.com/api-clique$thumbnailUrl';
-    log(fullUrl);
     try {
       return Image(
         image: CachedNetworkImageProvider(
-          'https://cactisocial.com/api-clique${request.thumbnailUrl}',
+          request.consultantIds,
           headers: {
             'Accept': 'image/*',
             // Add any required headers
@@ -210,14 +210,6 @@ class RequestCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-//            ClipRRect(
-//   borderRadius: BorderRadius.circular(8),
-//   child: AspectRatio(
-//     aspectRatio: 16 / 9,
-//     child: _buildNetworkImage(request.thumbnailUrl),
-//   ),
-// ),
-
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -225,9 +217,9 @@ class RequestCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: AspectRatio(
                         aspectRatio: 16 / 9,
-                        child: request.thumbnailUrl != null &&
-                                request.thumbnailUrl!.isNotEmpty
-                            ? _buildNetworkImage(request.thumbnailUrl!)
+                        child: request.consultantIds != null &&
+                                request.consultantIds.isNotEmpty
+                            ? _buildNetworkImage(request.consultantIds)
                             : Container(
                                 color: Colors.grey[200],
                                 child: Icon(Icons.broken_image),
@@ -251,7 +243,8 @@ class RequestCard extends StatelessWidget {
                           onPressed: () {
                             if (request.videoUrl != null &&
                                 request.videoUrl!.isNotEmpty) {
-                              _showVideoPopup(context, request.videoUrl!);
+                                  log(request.videoUrl);
+                              _showVideoPopup(context, request.videoUrl);
                             } else {
                               // Handle the case when videoUrl is null or empty
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -281,7 +274,7 @@ class RequestCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 28),
-                _buildButtonRow(isSmallScreen),
+                // _buildButtonRow(isSmallScreen),
               ],
             ),
           ),
@@ -291,66 +284,35 @@ class RequestCard extends StatelessWidget {
   }
 
   void _showVideoPopup(BuildContext context, String videoUrl) {
-    final fullVideoUrl = 'https://cactisocial.com/api-clique$videoUrl';
-
+    // final fullVideoUrl = 'https://cactisocial.com/api-clique$videoUrl';
+log("video url");
+log(videoUrl);
     showDialog(
       context: context,
-      // builder: (context) => VideoPopupPlayer(videoUrl: fullVideoUrl),
-        builder: (context) => VideoPopup(videoUrl: fullVideoUrl),
+      builder: (context) => VideoPopup(videoUrl: videoUrl),
       barrierColor: Colors.black87,
     );
   }
 
   Widget _buildButtonRow(bool isSmallScreen) {
-    final isPending = request.status == 'pending';
+    // final isPending = request.status == 'pending';
 
     return SizedBox(
       height: isSmallScreen ? 80 : 36,
-      child: isSmallScreen
-          ? Column(
+      child:  Column(
               children: [
                 _buildActionButton(
                   icon: Icons.check,
-                  label: isPending ? "Approve" : "Approved",
-                  color:
-                      isPending ? AppColors.approveButtonColor : Colors.green,
-                  onPressed: isPending ? onApprove : null,
+                  label:"Delete Popstream",
+                  color: AppColors.approveButtonColor ,
+                  onPressed: null,
                   isSmallScreen: isSmallScreen,
                 ),
                 const SizedBox(height: 8),
-                _buildActionButton(
-                  icon: Icons.close,
-                  label: isPending ? "Reject" : "Rejected",
-                  color: isPending ? AppColors.rejectButtonColor : Colors.red,
-                  onPressed: isPending ? onReject : null,
-                  isSmallScreen: isSmallScreen,
-                ),
+              
               ],
             )
-          : Row(
-              children: [
-                Expanded(
-                  child: _buildActionButton(
-                    icon: Icons.check,
-                    label: isPending ? "Approve" : "Approved",
-                    color:
-                        isPending ? AppColors.approveButtonColor : Colors.green,
-                    onPressed: isPending ? onApprove : null,
-                    isSmallScreen: isSmallScreen,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildActionButton(
-                    icon: Icons.close,
-                    label: isPending ? "Reject" : "Rejected",
-                    color: isPending ? AppColors.rejectButtonColor : Colors.red,
-                    onPressed: isPending ? onReject : null,
-                    isSmallScreen: isSmallScreen,
-                  ),
-                ),
-              ],
-            ),
+          
     );
   }
 

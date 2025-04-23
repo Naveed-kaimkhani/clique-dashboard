@@ -17,7 +17,7 @@ class AuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final buttonHeight = screenSize.height * 0.06;
+    final buttonHeight = screenSize.height * 0.04;
     final buttonWidth = screenSize.width * 0.9;
     final fontSize = screenSize.width * 0.009;
     final spinnerSize = screenSize.width * 0.02;

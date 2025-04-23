@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class Group {
   final String guid;
-  final String name;
+   String name;
   final String type;
   final int membersCount;
   final String conversationId;

@@ -79,7 +79,36 @@ class GroupRepository {
     }
   }
 
+  Future<bool> deleteGroup(String guid) async {
+    final String url = "${ApiEndpoints.cometchatBaseUrl}/groups/$guid";
 
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          "apikey": ApiEndpoints.apiKey,
+          "accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['data']['success'] == true) {
+          Utils.showCustomSnackBar(
+              "Success", "Group deleted successfully", ContentType.success);
+          return true;
+        } else {
+          throw Exception(data['data']['message'] ?? 'Unknown error');
+        }
+      } else {
+        throw Exception(
+            "Failed to delete group. Status: ${response.statusCode}");
+      }
+    } catch (e) {
+      Utils.showCustomSnackBar("Error", e.toString(), ContentType.failure);
+      return false;
+    }
+  }
   /// **Fetch Groups from API**
   Future<List<Group>> fetchGroups() async {
     try {
@@ -99,4 +128,41 @@ class GroupRepository {
       throw Exception("Failed to load groups: $e");
     }
   }
+
+
+  Future<bool> updateGroupName(String guid, String newName) async {
+  final String url = "${ApiEndpoints.cometchatBaseUrl}/groups/$guid";
+
+  try {
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        "apikey": ApiEndpoints.apiKey,
+        "accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "name": newName,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['data'] != null) {
+        Utils.showCustomSnackBar(
+            "Success", "Group name updated", ContentType.success);
+        return true;
+      } else {
+        throw Exception(data['message'] ?? "Unknown error");
+      }
+    } else {
+      throw Exception(
+          "Failed to update group name. Status: ${response.statusCode}");
+    }
+  } catch (e) {
+    Utils.showCustomSnackBar("Error", e.toString(), ContentType.failure);
+    return false;
+  }
+}
+
 }

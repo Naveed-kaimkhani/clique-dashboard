@@ -3,7 +3,7 @@ class InfluencerModel {
   final String name;
   final String email;
   final String? phone;
-  final String? role;
+   String? role;
   // final DateTime? emailVerifiedAt;
   // final String? cometchatAuthToken;
   final String? profilePhoto;

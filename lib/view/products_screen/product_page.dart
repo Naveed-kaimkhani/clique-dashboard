@@ -7,9 +7,17 @@ import 'package:post_krakren_dashboard/view_model/product_view_model.dart';
 
 class ProductPage extends StatelessWidget {
   final ProductViewModel _productViewModel = Get.put(ProductViewModel());
+  // final ScrollController _scrollController = ScrollController();
 
-  ProductPage({super.key});
-
+  ProductPage({super.key}) {
+    // _scrollController.addListener(_onScroll);
+  }
+  // void _onScroll() {
+  //   if (_scrollController.position.pixels >=
+  //       _scrollController.position.maxScrollExtent - 300) {
+  //     _productViewModel.loadMoreProducts();
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,10 +45,17 @@ class ProductPage extends StatelessWidget {
                 if (_productViewModel.products.isEmpty) {
                   return const Center(child: Text('No products found'));
                 }
-
+  ScrollController _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _productViewModel.loadMoreProducts();
+      }
+    });
                 return SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: GridView.builder(
+                      // controller: _scrollController,
+
                     itemCount: _productViewModel.products.length,
                     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 250,
@@ -49,6 +64,23 @@ class ProductPage extends StatelessWidget {
                       childAspectRatio: 0.85,
                     ),
                     itemBuilder: (context, index) {
+                                  if (index == _productViewModel.products.length) {
+  if (_productViewModel.currentPage.value < _productViewModel.totalPages.value) {
+    return Padding(
+      padding: const EdgeInsets.only(left:  28.0),
+      child: Column(
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 2,),
+          GradientText( "Fetching more products. Please wait...",fontSize: 12, gradient: AppColors.appGradientColors,),
+          
+        ],
+      ),
+    );
+  } else {
+    return const SizedBox.shrink(); // No more products
+  }
+}
                       final product = _productViewModel.products[index];
                       return ProductCard(product: product);
                     },
@@ -322,3 +354,123 @@ void showEditPriceDialog(BuildContext context) {
   });
 }
 }
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:shimmer/shimmer.dart';
+
+// class ViewAllProductsScreen extends StatelessWidget {
+//   const ViewAllProductsScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//       final ProductViewModel productViewModel = Get.isRegistered<ProductViewModel>()
+//     ? Get.find<ProductViewModel>()
+//     : Get.put(ProductViewModel(), permanent: true);
+//     return Container(
+//       decoration: BoxDecoration(
+//         gradient: AppColors.appGradientColors,
+//       ),
+//       child: SafeArea(
+//         bottom: false,
+//         child: Scaffold(
+//           // appBar: AllProductsAppBar(title: "All Products", icon: Icons.arrow_back_ios , isNotification: true,),
+//           backgroundColor: Colors.white,
+//           body: Padding(
+//             padding: const EdgeInsets.only(top: 12.0),
+//             child: Obx(() {
+//              if (productViewModel.isLoading.value && productViewModel.products.isEmpty) {
+//               return CircularProgressIndicator();
+//             }
+            
+            
+//               return _buildProductGrid(context, productViewModel);
+//             }),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+
+//   Widget _buildProductGrid(BuildContext context, ProductViewModel productViewModel) {
+//     final size = MediaQuery.of(context).size;
+//     ScrollController _scrollController = ScrollController();
+//     _scrollController.addListener(() {
+//       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+//         productViewModel.loadMoreProducts();
+//       }
+//     });
+//     return AnimatedSwitcher(
+//       duration: const Duration(milliseconds: 300),
+//       child: GridView.builder(
+//         controller: _scrollController,
+//         key: const ValueKey('products_grid'),
+//         padding: const EdgeInsets.only(bottom:  4.0, left: 20.0, right: 20.0),
+//         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//           crossAxisCount: 2,
+//           crossAxisSpacing: size.width * 0.04,
+//           childAspectRatio: 0.6,
+//         ),
+//         itemCount: productViewModel.products.length + 1, // +1 for the loading indicator
+//         itemBuilder: (_, index) {
+//           if (index == productViewModel.products.length) {
+            
+//             if (index == productViewModel.products.length) {
+//   if (productViewModel.currentPage.value < productViewModel.totalPages.value) {
+//     return Padding(
+//       padding: const EdgeInsets.only(left:  28.0),
+//       child: Column(
+//         children: [
+//           CircularProgressIndicator(),
+//           SizedBox(height: 2,),
+//           GradientText( "Fetching more products. Please wait...",fontSize: 12, gradient: AppColors.appGradientColors,),
+          
+//         ],
+//       ),
+//     );
+//   } else {
+//     return const SizedBox.shrink(); // No more products
+//   }
+// }
+// }
+
+//           final product = productViewModel.products[index];
+
+//           return ProductCard(product: product);
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget _buildShimmerGrid(BuildContext context) {
+//   final size = MediaQuery.of(context).size;
+
+//   return GridView.builder(
+//     padding: const EdgeInsets.symmetric(horizontal: 20),
+//     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//       crossAxisCount: 2,
+//       crossAxisSpacing: size.width * 0.009,
+//       childAspectRatio: 0.6,
+//     ),
+//     itemCount: 6, // Number of shimmer items
+//     itemBuilder: (context, index) => Shimmer.fromColors(
+//       baseColor: Colors.grey[300]!,
+//       highlightColor: Colors.grey[100]!,
+//       child: Container(
+//         margin: const EdgeInsets.only(bottom: 10),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
+// }

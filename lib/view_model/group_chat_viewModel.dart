@@ -7,6 +7,7 @@ import 'package:post_krakren_dashboard/core/api/api_client.dart';
 import 'package:post_krakren_dashboard/core/api/api_endpoints.dart';
 import 'package:post_krakren_dashboard/data/model/message_model.dart';
 
+import 'package:post_krakren_dashboard/data/repositories/group_repository.dart';
 class GroupChatViewModel extends GetxController {
   final String groupId;
   final String token;
@@ -23,6 +24,7 @@ class GroupChatViewModel extends GetxController {
   Stream<List<MessageModel>> get messagesStream => _messageController.stream;
 
   final ApiClient apiClient = Get.find<ApiClient>();
+  GroupRepository groupRepository=GroupRepository();
   Timer? _timer;
   bool _isLoading = false;
   bool hasMoreMessages = true;
@@ -150,7 +152,7 @@ class GroupChatViewModel extends GetxController {
         headers: {
           "Content-Type": "application/json",
           "accept": "application/json",
-          "apikey": "f6985bc6a317824cc687e82794955efded6bf2b1",
+          "apikey": ApiEndpoints.apiKey,
           "onBehalfOf": userId,
         },
         body: jsonEncode({
@@ -172,4 +174,12 @@ class GroupChatViewModel extends GetxController {
       Get.snackbar("Error", "Failed to send message: $e");
     }
   }
+
+  Future<void> deleteGroupByGuid(String guid) async {
+    await groupRepository.deleteGroup(guid);
+  }
+
+
+
+
 }

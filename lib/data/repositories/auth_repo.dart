@@ -98,9 +98,6 @@ class AuthRepository {
             "email": email,
           }));
           log(response.body);
-      log(email);
-      log(response.statusCode.toString());
-      log(response.body.toString());
       return response.statusCode;
     } catch (e) {
       //  Utils.showCustomSnackBar("Error","Failed to send OTP: $e ", ContentType.failure);

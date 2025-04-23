@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:post_krakren_dashboard/constants/app_routes.dart';
+import 'package:post_krakren_dashboard/data/model/influencer_model.dart';
 import 'package:post_krakren_dashboard/view_model/create_group_viewModel.dart';
+import 'package:post_krakren_dashboard/view_model/influencer_viewmodel.dart';
 
 class CreateGroupPage extends StatelessWidget {
   final CreateGroupViewModel viewModel = Get.put(CreateGroupViewModel());
+final InfluencerViewmodel _viewModel = Get.find<InfluencerViewmodel>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class CreateGroupPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.toNamed(RouteName.createGroupPage),
+          onPressed: () => Get.back(),
         ),
         title: const Text(
           'Create Group',
@@ -89,8 +93,15 @@ class CreateGroupPage extends StatelessWidget {
                         onPressed: () {
                           viewModel.createGroupAPI();
                         },
-                        child: const Text('Save',
-                            style: TextStyle(color: Colors.white)),
+                        child: Obx((){
+                        return  viewModel.isLoading.value?SizedBox(
+  height: 14,  // Set your custom size
+  width: 14,
+  child: CircularProgressIndicator(color: Colors.white,),
+)
+: Text('Save',
+                            style: TextStyle(color: Colors.white));
+                        })
                       )
                     ],
                   )
@@ -142,27 +153,41 @@ class CreateGroupPage extends StatelessWidget {
           ),
           items: viewModel.allMembers.map((member) {
             return DropdownMenuItem<String>(
-              value: member,
-              child: Text(member),
+              value: member.id.toString(),
+              child: Text(member.name),
             );
           }).toList(),
           onChanged: (selected) {
             if (selected != null &&
                 !viewModel.selectedMembers.contains(selected)) {
               viewModel.selectedMembers.add(selected);
+              log(viewModel.selectedMembers.toString());
             }
           },
         ),
         const SizedBox(height: 10),
+   
         Obx(() => Wrap(
-              spacing: 8,
-              children: viewModel.selectedMembers.map((member) {
-                return Chip(
-                  label: Text(member),
-                  onDeleted: () => viewModel.selectedMembers.remove(member),
-                );
-              }).toList(),
-            )),
+  spacing: 8,
+  children: viewModel.selectedMembers.map((uid) {
+    // Find the influencer with this uid
+    // final influencer = _viewModel.influencers.firstWhere(
+    //   (inf) => inf.id == uid,
+    //   // orElse: () => InfluencerModel(uid: uid, name: 'Unknown'),
+    // );
+    final influencer = _viewModel.influencers.firstWhere(
+  (inf) => inf.id == int.parse(uid),
+  // orElse: () => InfluencerModel(uid: uid, name: 'Unknown'),
+);
+
+
+    return Chip(
+      label: Text(influencer.name ?? 'Unknown'),
+      onDeleted: () => viewModel.selectedMembers.remove(uid),
+    );
+  }).toList(),
+))
+
       ],
     );
   }
