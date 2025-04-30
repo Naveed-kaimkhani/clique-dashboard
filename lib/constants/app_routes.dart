@@ -9,6 +9,8 @@ static const String homeScreen = '/HomeScreen';
 static const String dashboardScreen = '/DashboardScreen';
 static const String oTPScreen = '/OTPScreen';
 
+static const String ordersTableScreen = '/OrdersTableScreen';
+
 static const String uploadVideo = '/UploadVideo';
 // static const String groupChatScreen = '/GroupChatScreen';
 static const String influencerProfile = '/InfluencerProfile';
@@ -17,6 +19,8 @@ static const String notificationScreen = '/NotificationScreen';
 
 static const String createGroupPage = '/CreateGroupPage';
 static const String searchScreen = '/SearchScreen';
+
+static const String productSearchScreen = '/productSearchScreen';
 
 
 static const String viewAllInfluencersScreen = '/ViewAllInfluencersScreen';

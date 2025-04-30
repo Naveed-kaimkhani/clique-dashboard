@@ -1,11 +1,10 @@
-
-
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/index.dart';
 import 'package:post_krakren_dashboard/components/order_chart.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dasborad_stats.dart';
+import '../../view_model/revenue_controller.dart';
 
 class DashboardHome extends StatefulWidget {
   const DashboardHome({super.key});
@@ -17,8 +16,19 @@ class DashboardHome extends StatefulWidget {
 class _DashboardHomeState extends State<DashboardHome> {
   final PageController controller =
       PageController(viewportFraction: 0.8, keepPage: true);
+  final revenueController = Get.isRegistered<RevenueController>()
+      ? Get.find<RevenueController>()
+      : Get.put(RevenueController());
 
   Widget _buildEarningCard() {
+    // final totalProfit = double.tryParse(revenueController.revenueData.value?.totalProfit ?? "0") ?? 0;
+
+    final totalProfit = revenueController.revenueData.value?.totalProfit ?? 0;
+    final totalRevenue = revenueController.revenueData.value?.totalRevenue ?? 0;
+    final percentage = totalProfit / totalRevenue;
+
+    // final percentage = totalProfit / totalRevenue;
+    final percentageText = "${(percentage * 100).toStringAsFixed(0)}%";
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -28,15 +38,21 @@ class _DashboardHomeState extends State<DashboardHome> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("EARNING", style: TextStyle(color: Colors.grey, fontSize: 14)),
+            Text("Profit Chart",
+                style: TextStyle(color: Colors.grey, fontSize: 14)),
             SizedBox(height: 24),
-            Text("\$2,562",
+            Text("\$${revenueController.revenueData.value?.totalProfit}",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 24),
-            CircularPercentIndicator(value: 0.86, percentage: "86"),
+            CircularPercentIndicator(
+                value: percentage, percentage: percentageText),
             Divider(),
-            _buildStatRow("Cost", "108", "+37.7%"),
-            _buildStatRow("Revenue", "1168", "-18.9%"),
+            // _buildStatRow("Cost", "108", "+37.7%"),
+            _buildStatRow(
+                "Total Revenue",
+                revenueController.revenueData.value?.totalRevenue.toString() ??
+                    "",
+                ""),
           ],
         ),
       ),
@@ -57,7 +73,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             CircularPercentIndicator(value: 0.70, percentage: "70%"),
             SizedBox(height: 24),
             Divider(),
-            _buildStatRow("Cost", "\$1,823", "+12%"),
+            // _buildStatRow("Cost", "\$1,823", "+12%"),
             _buildStatRow("Revenue", "\$6,830", "+8%"),
             _buildStatRow("Earning", "\$4,830", "+8%"),
           ],
@@ -75,90 +91,116 @@ class _DashboardHomeState extends State<DashboardHome> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 12 : screenWidth * 0.05,
-                vertical: isMobile ? 12 : 24,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DashboardStats(),
-                    SizedBox(height: isMobile ? 12 : 24),
-                    Container(
-                      height:420,
-                      width: double.infinity, // Changed from fixed 1300
-                      constraints: BoxConstraints(
-                        minHeight: 350,
-                        maxHeight: 500,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          )
-                        ],
-                      ),
-                      child: EnhancedBarChart(isShowingMainData: true,),
-                    ),
-                    SizedBox(height: isMobile ? 12 : 24),
-                    // Responsive card row
-                    if (isMobile) ...[
-                      _buildEarningCard(),
-                      SizedBox(height: 12),
-                      _buildProgressCard(),
-                      SizedBox(height: 12),
-                      _buildBarChartCard(),
-                    ] else ...[
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              SizedBox(
-                                width: isTablet 
-                                    ? constraints.maxWidth / 2 - 24 
-                                    : constraints.maxWidth / 3 - 24,
-                                child: _buildEarningCard(),
-                              ),
-                              SizedBox(
-                                width: isTablet 
-                                    ? constraints.maxWidth / 2 - 24 
-                                    : constraints.maxWidth / 3 - 24,
-                                child: _buildProgressCard(),
-                              ),
-                              if (!isTablet) SizedBox(
-                                width: constraints.maxWidth / 3 - 24,
-                                child: _buildBarChartCard(),
-                              ),
+          backgroundColor: Colors.white,
+          body: Obx(() {
+            if (revenueController.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (revenueController.error.isNotEmpty) {
+              return Center(
+                  child: Text('Error: ${revenueController.error.value}'));
+            } else if (revenueController.revenueData.value == null) {
+              return const Center(child: Text('No data available'));
+            }
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 12 : screenWidth * 0.05,
+                    vertical: isMobile ? 12 : 24,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DashboardStats(),
+                        SizedBox(height: isMobile ? 12 : 24),
+                        Container(
+                          height: 420,
+                          width: double.infinity, // Changed from fixed 1300
+                          constraints: BoxConstraints(
+                            minHeight: 350,
+                            maxHeight: 500,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              )
                             ],
-                          );
-                        },
-                      ),
-                      if (isTablet) ...[
-                        SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: _buildBarChartCard(),
+                          ),
+                          child: EnhancedBarChart(
+                            isShowingMainData: true,
+                          ),
                         ),
+                        SizedBox(height: isMobile ? 12 : 24),
+                        // Responsive card row
+                        if (isMobile) ...[
+                          _buildEarningCard(),
+                          SizedBox(height: 12),
+                          _buildProgressCard(),
+                          SizedBox(height: 12),
+                          _buildBarChartCard(
+                              revenueController.revenueData.value?.totalRevenue
+                                      .toString() ??
+                                  "",
+                              "19%"),
+                        ] else ...[
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
+                                children: [
+                                  SizedBox(
+                                    width: isTablet
+                                        ? constraints.maxWidth / 2 - 24
+                                        : constraints.maxWidth / 3 - 24,
+                                    child: _buildEarningCard(),
+                                  ),
+                                  SizedBox(
+                                    width: isTablet
+                                        ? constraints.maxWidth / 2 - 24
+                                        : constraints.maxWidth / 3 - 24,
+                                    child: _buildProgressCard(),
+                                  ),
+                                  if (!isTablet)
+                                    SizedBox(
+                                      width: constraints.maxWidth / 3 - 24,
+                                      child: _buildBarChartCard(
+                                          revenueController.revenueData.value
+                                                  ?.totalRevenue
+                                                  .toString() ??
+                                              "",
+                                          "19%"),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          if (isTablet) ...[
+                            SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: _buildBarChartCard(
+                                  revenueController
+                                          .revenueData.value?.totalRevenue
+                                          .toString() ??
+                                      "",
+                                  "19%"),
+                            ),
+                          ],
+                        ],
                       ],
-                    ],
-                  ],
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             );
-          },
-        ),
-      ),
+          })),
     );
   }
 }
@@ -205,7 +247,7 @@ Widget _buildBarChart() {
   );
 }
 
-Widget _buildBarChartCard() {
+Widget _buildBarChartCard(String revenue, String percentage) {
   return Card(
     color: Colors.white,
     elevation: 4,
@@ -223,12 +265,12 @@ Widget _buildBarChartCard() {
           Text("+37.7%", style: TextStyle(color: Colors.green)),
           SizedBox(height: 10),
           SizedBox(
-            height: 60, 
+            height: 60,
             child: _buildBarChart(),
           ),
           Divider(),
           _buildStatRow("Cost", "108", "+37.7%"),
-          _buildStatRow("Revenue", "1168", "-18.9%"),
+          _buildStatRow("Total Revenue", revenue, "-18.9%"),
         ],
       ),
     ),

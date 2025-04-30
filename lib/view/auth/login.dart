@@ -1,20 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:post_krakren_dashboard/components/auth_button.dart';
 import 'package:post_krakren_dashboard/constants/app_routes.dart';
 import 'package:post_krakren_dashboard/data/model/signup_params.dart';
 import 'package:post_krakren_dashboard/utils/utils.dart';
 import 'package:post_krakren_dashboard/view_model/auth_viewmodel.dart';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   // final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-    RegExp emailRegex =
+  RegExp emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   bool validateFields() {
     if (_emailController.text.isEmpty) {
@@ -30,6 +27,7 @@ class LoginScreen extends StatelessWidget {
     }
     return true;
   }
+
   final OTPViewModel otpViewModel = Get.put(OTPViewModel());
   @override
   Widget build(BuildContext context) {
@@ -109,14 +107,14 @@ class LoginScreen extends StatelessWidget {
                   buttonText: 'Login',
                   isLoading: otpViewModel.isLoading,
                   onPressed: () async {
-                    if (validateFields()) {
+                    if (true) {
                       otpViewModel.isLoading.value = true;
 
                       final SignupParams request = SignupParams(
                         name: "",
-                        // email:"cliqueforappledemo@gmail.com",
+                        email: "cliqueforappledemo@gmail.com",
 
-                        email: _emailController.text,
+                        // email: _emailController.text,
                         phone: "",
                         role: "",
                       );

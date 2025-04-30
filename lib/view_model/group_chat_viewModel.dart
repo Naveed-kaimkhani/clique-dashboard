@@ -56,8 +56,6 @@ class GroupChatViewModel extends GetxController {
             "https://cactisocial.com/api-clique/public/api/v1/cometchat/groups/$groupId/messages?limit=20",
         headers: {"Authorization": "Bearer $token"},
       );
-      log(response.body);
-
       if (response.statusCode == 200) {
         final dynamic responseData = jsonDecode(response.body);
 
@@ -87,7 +85,6 @@ class GroupChatViewModel extends GetxController {
     if (_isLoading || (loadMore && !hasMoreMessages)) return;
     _isLoading = true;
     if (loadMore) {
-      log("loading more messages");
     }
     try {
       String apiUrl =
@@ -99,7 +96,7 @@ class GroupChatViewModel extends GetxController {
             _messages.first.time; // Timestamp of the oldest message
         apiUrl +=
             "?limit=200&timeStamp=$lastMessageTimestamp-${8000}"; // Use limit=200 for older messages
-        log("limit added");
+  
       } else {
         // Fetch initial messages with limit of 20
         apiUrl += "?limit=10";
@@ -165,8 +162,6 @@ class GroupChatViewModel extends GetxController {
           "receiverType": "group",
         }),
       );
-      log("message sent");
-      log(response.body);
       if (response.statusCode == 200) {
         _fetchMessages(false); // Refresh messages after sending a new one
       }

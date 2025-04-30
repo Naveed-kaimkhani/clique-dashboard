@@ -12,7 +12,7 @@ class ProductRepository {
 
   Future<Map<String, dynamic>> fetchProducts({
     int page = 1,
-    int perPage = 10,
+    // int perPage = 10,
   }) async {
     final response = await http.get(
       Uri.parse('https://cactisocial.com/api-clique/public/api/v1/topdawg/products?page=$page'),

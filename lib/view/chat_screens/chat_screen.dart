@@ -33,7 +33,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   void initState() {
-    log(widget.guid);
     super.initState();
     final UserController userController = Get.find<UserController>();
     _isDesktop = MediaQuery.of(Get.context!).size.width > 768;
@@ -52,7 +51,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     if (_scrollController.position.pixels ==
         _scrollController.position.minScrollExtent) {
       setState(() => _isLoadingOlderMessages = true);
-
     }
   }
 
@@ -122,6 +120,10 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       ),
       child: Row(
         children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
           if (!isSidebarHeader && !_isDesktop) ...[
             IconButton(
               icon: Icon(Icons.arrow_back),

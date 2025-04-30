@@ -1,11 +1,14 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:post_krakren_dashboard/components/index.dart';
+import 'package:get/get.dart';
+import 'package:post_krakren_dashboard/components/stat_card.dart';
+import 'package:post_krakren_dashboard/view/dashboard_home/orders_table_screen.dart';
+import 'package:post_krakren_dashboard/view_model/revenue_controller.dart';
 
 class DashboardStats extends StatelessWidget {
-  const DashboardStats({super.key});
-
+  DashboardStats({super.key});
+  final revenueController = Get.isRegistered<RevenueController>()
+      ? Get.find<RevenueController>()
+      : Get.put(RevenueController());
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -72,128 +75,42 @@ class DashboardStats extends StatelessWidget {
   }
 
   List<StatCard> _buildCards(BuildContext context) {
-    return const [
+    final ordersCount = revenueController.revenueData.value?.orders.length ?? 0;
+    final revenueCount = revenueController.revenueData.value?.totalRevenue ?? 0;
+
+    return [
       StatCard(
-        title: "Monthly Sales",
-        value: "\$1250",
-        percentage: "+5.5%",
+        title: "Total Revenue",
+        value: "\$$revenueCount",
+        percentage: "",
         icon: Icons.email,
-        backgroundColor:Colors.white,
+        backgroundColor: Colors.white,
         textColor: Colors.black,
       ),
       StatCard(
-        title: "Orders",
-        value: "1,869",
-        percentage: "+16.5%",
+        title: "Total Orders",
+        value: ordersCount.toString(),
+        percentage: "",
         icon: Icons.shopping_cart,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OrdersTableScreen(
+                orders: revenueController.revenueData.value!.orders),
+          ),
+        ),
       ),
-      StatCard(
-        title: "Conversion",
-        value: "86.6%",
-        icon: Icons.filter_alt,
-        showProgress: true,
-      ),
-      StatCard(
-        title: "AVG Orders",
-        value: "\$80",
-        icon: Icons.analytics,
-      ),
+      // StatCard(
+      //   title: "Conversion",
+      //   value: "86.6%",
+      //   icon: Icons.filter_alt,
+      //   showProgress: true,
+      // ),
+      // StatCard(
+      //   title: "AVG Orders",
+      //   value: "\$80",
+      //   icon: Icons.analytics,
+      // ),
     ];
-  }
-}
-
-class StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String? percentage;
-  final IconData icon;
-  final Color backgroundColor;
-  final Color textColor;
-  final bool showProgress;
-
-  const StatCard({
-    super.key,
-    required this.title,
-    required this.value,
-    this.percentage,
-    required this.icon,
-    this.backgroundColor = Colors.white,
-    this.textColor = Colors.black,
-    this.showProgress = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
-          )
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: AppColors.appColor,
-                child: Icon(icon, size: 16, color: Colors.white),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          if (percentage != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                percentage!,
-                style: const TextStyle(
-                  color: Colors.green,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          if (showProgress)
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: LinearProgressIndicator(
-                value: 0.86,
-                color: Colors.green,
-                backgroundColor: Colors.grey,
-              ),
-            ),
-        ],
-      ),
-    );
   }
 }

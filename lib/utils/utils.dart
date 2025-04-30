@@ -26,14 +26,16 @@ class Utils {
   }
 }
 
-// static Future<void> saveJoinedGroup(String guid) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   List<String> joinedGroups = prefs.getStringList('joined_groups') ?? [];
-//   if (!joinedGroups.contains(guid)) {
-//     joinedGroups.add(guid);
-//     await prefs.setStringList('joined_groups', joinedGroups);
-//   }
-// }
+double calculateAverageTotal(List<Map<String, dynamic>> orders) {
+  double totalSum = 0;
+
+  for (var order in orders) {
+    totalSum += double.tryParse(order['total_price'] ?? '0') ?? 0;
+  }
+
+  return orders.isEmpty ? 0 : totalSum / orders.length;
+}
+
 static Future<List<String>> getJoinedGroups() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getStringList('joined_groups') ?? [];

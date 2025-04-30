@@ -78,7 +78,6 @@ class PopstreamController extends GetxController {
         "Content-Type": "application/json",
       },
     );
-log(response.statusCode.toString());
     if (response.statusCode == 200 ) {
       Get.snackbar("Success", "Popstream deleted successfully");
       fetchPopstreams(); // Refresh the list

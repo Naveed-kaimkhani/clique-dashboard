@@ -9,7 +9,6 @@ import 'package:post_krakren_dashboard/data/repositories/influencer_repository.d
 import 'package:post_krakren_dashboard/routes/app_routes.dart';
 import 'package:post_krakren_dashboard/view/auth/login.dart';
 void main() {
-  
   WidgetsFlutterBinding.ensureInitialized();
   // Necessary initialization for package:media_kit.
   MediaKit.ensureInitialized();

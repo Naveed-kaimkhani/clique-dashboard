@@ -1,5 +1,3 @@
-
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,8 +11,8 @@ import 'package:post_krakren_dashboard/view_model/group_controller.dart';
 
 class ChatList extends StatelessWidget {
   final DiscoverViewModel _viewModel = Get.isRegistered<DiscoverViewModel>()
-    ? Get.find<DiscoverViewModel>()
-    : Get.put(DiscoverViewModel());
+      ? Get.find<DiscoverViewModel>()
+      : Get.put(DiscoverViewModel());
 
   final GroupController _chatViewModel = Get.put(GroupController());
 
@@ -23,36 +21,38 @@ class ChatList extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 🚫 Hides the back button
+
         backgroundColor: Colors.white,
         elevation: 0,
-        title: GradientText( 
+        title: GradientText(
           'Groups',
           gradient: AppColors.appGradientColors,
-fontSize: 30,
-
-          
-          ),
-     
-        actions: [Padding(
-  padding: const EdgeInsets.only(top: 30, right: 50.0),
-  child: MouseRegion(
-    cursor: SystemMouseCursors.click, // 👈 changes cursor to finger on hover
-    child: GestureDetector(
-      onTap: () {
-        Get.toNamed(RouteName.createGroupPage); // Navigate to Create Group Screen
-      },
-      child: Text(
-        '+ Create Group',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+          fontSize: 30,
         ),
-      ),
-    ),
-  ),
-)
 
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 30, right: 50.0),
+            child: MouseRegion(
+              cursor: SystemMouseCursors
+                  .click, // 👈 changes cursor to finger on hover
+              child: GestureDetector(
+                onTap: () {
+                  Get.toNamed(RouteName
+                      .createGroupPage); // Navigate to Create Group Screen
+                },
+                child: Text(
+                  '+ Create Group',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
@@ -94,7 +94,7 @@ fontSize: 30,
 
   Widget _buildChatListItem(BuildContext context, Group group, bool isDesktop) {
     final size = MediaQuery.of(context).size;
-    
+
     // Responsive sizing
     final double horizontalPadding = isDesktop ? 16 : size.width * 0.03;
     final double verticalPadding = isDesktop ? 8 : size.height * 0.01;
@@ -103,7 +103,9 @@ fontSize: 30,
     final double borderRadius = isDesktop ? 8 : size.width * 0.025;
     final double shadowBlur = isDesktop ? 6 : size.width * 0.02;
     final double shadowSpread = isDesktop ? 1 : size.width * 0.005;
-    final Offset shadowOffset = isDesktop ? Offset(1, 2) : Offset(size.width * 0.005, size.width * 0.01);
+    final Offset shadowOffset = isDesktop
+        ? Offset(1, 2)
+        : Offset(size.width * 0.005, size.width * 0.01);
 
     return Container(
       decoration: BoxDecoration(
@@ -194,64 +196,56 @@ fontSize: 30,
                 // Desktop-only additional info
                 if (isDesktop) ...[
                   SizedBox(width: 16),
-                  // Text(
-                  //   'Active now',
-                  //   style: TextStyle(
-                  //     fontSize: fontSize * 0.85,
-                  //     color: Colors.green,
-                  //   ),
-                  // ),
                   PopupMenuButton<String>(
-  onSelected: (value) {
-    if (value == 'Edit') {
-      showRenameDialog(group);
-    } else if (value == 'delete') {
-      Get.defaultDialog(
-  title: "Delete Group",
-  middleText: "Are you sure you want to delete '${group.name}'?",
-  confirm: ElevatedButton(
-    onPressed: () {
-      _chatViewModel.deleteGroupByGuid(group.guid);
-      Get.back(); // Close dialog
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.appColor,
-      foregroundColor: Colors.white, // ✅ Text color
-    ),
-    child: Text("Delete", style: TextStyle(fontWeight: FontWeight.bold)),
-  ),
-  cancel: TextButton(
-    onPressed: () {
-      Get.back(); // Just close
-    },
-    child: Text(
-      "Cancel",
-      style: TextStyle(
-        color: Colors.grey[800], // ✳️ Cancel button text color
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  ),
-);
-
-    }
-  },
-  itemBuilder: (context) => [
-    PopupMenuItem(
-      value: 'Edit',
-      child: Text('Edit'),
-    ),
-    PopupMenuItem(
-  
-      value: 'delete',
-      child: Text('Delete'),
-    ),
-  ],
-  icon: Icon(Icons.more_vert, color: Colors.grey[700], size: fontSize * 1.2),
-)
-
-
-
+                    onSelected: (value) {
+                      if (value == 'Edit') {
+                        showRenameDialog(group);
+                      } else if (value == 'delete') {
+                        Get.defaultDialog(
+                          title: "Delete Group",
+                          middleText:
+                              "Are you sure you want to delete '${group.name}'?",
+                          confirm: ElevatedButton(
+                            onPressed: () {
+                              _chatViewModel.deleteGroupByGuid(group.guid);
+                              Get.back(); // Close dialog
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.appColor,
+                              foregroundColor: Colors.white, // ✅ Text color
+                            ),
+                            child: Text("Delete",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          cancel: TextButton(
+                            onPressed: () {
+                              Get.back(); // Just close
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                color: Colors
+                                    .grey[800], // ✳️ Cancel button text color
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'Edit',
+                        child: Text('Edit'),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Delete'),
+                      ),
+                    ],
+                    icon: Icon(Icons.more_vert,
+                        color: Colors.grey[700], size: fontSize * 1.2),
+                  )
                 ],
               ],
             ),
@@ -262,33 +256,38 @@ fontSize: 30,
   }
 
   void showRenameDialog(Group group) {
-  final nameController = TextEditingController(text: group.name);
-  
-  Get.defaultDialog(
-    title: "Rename Group",
-    content: Column(
-      children: [
-        TextField(
-          controller: nameController,
-          decoration: InputDecoration(labelText: "New Group Name"),
-        ),
-      ],
-    ),
-    confirm: ElevatedButton(
-      onPressed: () {
-        final newName = nameController.text.trim();
-        if (newName.isNotEmpty) {
-          Get.find<GroupController>().renameGroup(group.guid, newName);
-          Get.back();
-        }
-      },
-      child: Text("Edit",style: TextStyle(color: Colors.black),),
-    ),
-    cancel: TextButton(
-      onPressed: () => Get.back(),
-      child: Text("Cancel",style: TextStyle(color: Colors.black),),
-    ),
-  );
-}
+    final nameController = TextEditingController(text: group.name);
 
+    Get.defaultDialog(
+      title: "Rename Group",
+      content: Column(
+        children: [
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(labelText: "New Group Name"),
+          ),
+        ],
+      ),
+      confirm: ElevatedButton(
+        onPressed: () {
+          final newName = nameController.text.trim();
+          if (newName.isNotEmpty) {
+            Get.find<GroupController>().renameGroup(group.guid, newName);
+            Get.back();
+          }
+        },
+        child: Text(
+          "Edit",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(),
+        child: Text(
+          "Cancel",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+  }
 }

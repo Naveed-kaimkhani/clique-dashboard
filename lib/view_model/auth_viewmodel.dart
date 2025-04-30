@@ -33,7 +33,7 @@ class OTPViewModel extends GetxController {
   }
 
   Future<int> sendOTP(String phone) async {
-    log("in send otp");
+
     int response = await _authRepo.SendOTP(phone);
 
     return response;

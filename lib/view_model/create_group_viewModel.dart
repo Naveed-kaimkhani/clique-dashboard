@@ -58,13 +58,11 @@ Future<String?> uploadGroupImage(File imageFile) async {
     } else {
       
     isLoading.value=false;
-      log("Upload Failed: ${response.statusCode}");
       return null;
     }
   } catch (e) {
     
     isLoading.value=false;
-    log("Upload Error: $e");
     return null;
   }
 }

@@ -15,20 +15,7 @@ class AuthRepository {
   final ApiClient apiClient = Get.find<ApiClient>();
 
   final UserController userController = Get.put(UserController());
-  // Future<void> registerUser(SignupParams request) async {
-  //   try {
-  //     // final prefs = await SharedPreferences.getInstance();
-  //    await apiClient.signUpApi(
-  //       ApiEndpoints.register,
-  //       body: request.toJson(),
-  //       headers: {"Content-Type": "application/json"},
-  //     );
 
-  //   } catch (e) {
-  //     Utils.showCustomSnackBar("Signup Failed", Utils.mapErrorMessage(e.toString()), ContentType.failure);
-  //     // throw Exception("Signup Failed: $e");
-  //   }
-  // }
 
   Future<OTPResponseModel> verifyOTP(OTPRequestModel otpRequest) async {
     try {
@@ -107,21 +94,4 @@ class AuthRepository {
       // return OTPResponseModel(success: false, message: "Network error.");
     }
   }
-  // Future<void> loginUser(Map<String, String> credentials) async {
-
-  //   try {
-  //     final response = await apiClient.loginUser(
-  //       ApiEndpoints.login,
-  //       body: credentials,
-  //       headers: {"Content-Type": "application/json"},
-  //     );
-
-  // // final UserController userController = Get.put(UserController());
-
-  //     // return UserRegistrationResponse.fromJson(response);
-  //   } catch (e) {
-  //     Utils.showCustomSnackBar("Login Failed", Utils.mapErrorMessage(e.toString()), ContentType.failure);
-  //     throw Exception("Login Failed: $e");
-  //   }
-  // }
 }

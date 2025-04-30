@@ -16,9 +16,7 @@ class GroupRepository {
   /// **Join Group API Call**
   Future<bool> joinGroup(String guid, int uid) async {
     try {
-      // if (guid.isEmpty || userController.token.value == null) {
-      //   throw Exception("User token not found. Please log in again.");
-      // }
+
 
       final Map<String, dynamic> body = {
         "guid": guid,
