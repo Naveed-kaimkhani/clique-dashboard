@@ -14,7 +14,9 @@ class OrdersRepo {
     int status = 4,
   }) async {
     final url = Uri.parse(
-      '${ApiEndpoints.baseUrl}/topdawg/revenue?start_date=$startDate&end_date=$endDate&status=$status',
+      // '${ApiEndpoints.baseUrl}/topdawg/revenue?start_date=$startDate&end_date=$endDate&status=$status',
+
+      '${ApiEndpoints.baseUrl}/topdawg/revenue',
     );
 
     final response = await http.get(

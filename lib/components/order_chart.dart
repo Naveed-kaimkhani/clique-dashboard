@@ -32,29 +32,49 @@ class EnhancedBarChart extends StatelessWidget {
           },
         ),
       ),
+      // titlesData: FlTitlesData(
+      //   show: true,
+      //   bottomTitles: AxisTitles(
+      //     sideTitles: SideTitles(
+      //       showTitles: true,
+      //       reservedSize: 28,
+      //       getTitlesWidget: bottomTitleWidgets,
+      //     ),
+      //   ),
+      //   leftTitles: AxisTitles(
+      //     sideTitles: SideTitles(
+      //       showTitles: true,
+      //       reservedSize: 40,
+      //       getTitlesWidget: leftTitleWidgets,
+      //     ),
+      //   ),
+      //   topTitles: const AxisTitles(
+      //     sideTitles: SideTitles(showTitles: false),
+      //   ),
+      //   rightTitles: const AxisTitles(
+      //     sideTitles: SideTitles(showTitles: false),
+      //   ),
+      // ),
       titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 28,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 40,
-            getTitlesWidget: leftTitleWidgets,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
+  bottomTitles: AxisTitles(
+    sideTitles: SideTitles(
+      showTitles: true,
+      getTitlesWidget: (value, meta) {
+        final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        return Text(days[value.toInt()], style: TextStyle(fontSize: 12));
+      },
+    ),
+  ),
+  leftTitles: AxisTitles(
+    sideTitles: SideTitles(
+      showTitles: true,
+      interval: 10,
+      getTitlesWidget: (value, meta) {
+        return Text(value.toInt().toString());
+      },
+    ),
+  ),
+),
       gridData: const FlGridData(show: false),
       borderData: FlBorderData(
         show: true,

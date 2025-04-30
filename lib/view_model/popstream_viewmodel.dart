@@ -121,10 +121,8 @@ class PopstreamController extends GetxController {
 
       if (response.statusCode == 200) {
         List<dynamic> popstreamList = response.body['popstreams'];
-log(popstreamList.toString());
         popstreams.value =
             popstreamList.map((item) => PopstreamModel.fromJson(item)).toList();
-        log(popstreams.value.toString());
       } else {
         fetchPopstreams();
         // Get.snackbar("Error", "Failed to fetch popstreams");

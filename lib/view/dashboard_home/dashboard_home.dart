@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/components/index.dart';
 import 'package:post_krakren_dashboard/components/order_chart.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dasborad_stats.dart';
+import 'package:post_krakren_dashboard/view/dashboard_home/weekly_sales_chart.dart';
 import '../../view_model/revenue_controller.dart';
 
 class DashboardHome extends StatefulWidget {
@@ -59,51 +60,14 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Widget _buildRevenueChart() {
-    // final totalProfit = double.tryParse(revenueController.revenueData.value?.totalProfit ?? "0") ?? 0;
-
-    final totalProfit = revenueController.revenueData.value?.totalProfit ?? 0;
-    final totalRevenue = revenueController.revenueData.value?.totalRevenue ?? 0;
-    final percentage = totalProfit / totalRevenue;
-
-    // final percentage = totalProfit / totalRevenue;
-    final percentageText = "${(percentage * 100).toStringAsFixed(0)}%";
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Revenue Chart",
-                style: TextStyle(color: Colors.grey, fontSize: 14)),
-            SizedBox(height: 24),
-            Text("\$${revenueController.revenueData.value?.totalRevenue}",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 24),
-            CircularPercentIndicator(
-                value: percentage, percentage: percentageText),
-            // Divider(),
-            // _buildStatRow("Cost", "108", "+37.7%"),
-            // _buildStatRow(
-            //     "Total Revenue",
-            //     revenueController.revenueData.value?.totalRevenue.toString() ??
-            //         "",
-            //     ""),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final isMobile = screenWidth < 600;
     final isTablet = screenWidth >= 600 && screenWidth < 1200;
+// final revenueResponse = RevenueResponse.fromJson(jsonData);
+    final weeklySales = revenueController.revenueData.value?.orders;
 
     return SafeArea(
       child: Scaffold(
@@ -148,22 +112,17 @@ class _DashboardHomeState extends State<DashboardHome> {
                               )
                             ],
                           ),
-                          child: EnhancedBarChart(
-                            isShowingMainData: true,
-                          ),
+                          // child: EnhancedBarChart(
+                          //   isShowingMainData: true,
+                          // ),
+                          // child: Wee,
+                          child: OrdersBarChart(orders: weeklySales ?? []),
                         ),
                         SizedBox(height: isMobile ? 12 : 24),
                         // Responsive card row
                         if (isMobile) ...[
                           _buildEarningCard(),
                           SizedBox(height: 12),
-                          // _buildRevenueChart(),
-                          // SizedBox(height: 12),
-                          // _buildBarChartCard(
-                          //     revenueController.revenueData.value?.totalRevenue
-                          //             .toString() ??
-                          //         "",
-                          //     "19%"),
                         ] else ...[
                           LayoutBuilder(
                             builder: (context, constraints) {
@@ -178,22 +137,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                                           : constraints.maxWidth / 3 - 24,
                                       child: _buildEarningCard(),
                                     ),
-                                    // SizedBox(
-                                    //   width: isTablet
-                                    //       ? constraints.maxWidth / 2 - 24
-                                    //       : constraints.maxWidth / 3 - 24,
-                                    //   child: _buildRevenueChart(),
-                                    // ),
-                                    // if (!isTablet)
-                                    //   SizedBox(
-                                    //     width: constraints.maxWidth / 3 - 24,
-                                    //     child: _buildBarChartCard(
-                                    //         revenueController.revenueData.value
-                                    //                 ?.totalRevenue
-                                    //                 .toString() ??
-                                    //             "",
-                                    //         "19%"),
-                                    //   ),
                                   ],
                                 ),
                               );

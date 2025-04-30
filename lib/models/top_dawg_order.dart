@@ -1,25 +1,62 @@
-// models/order_model.dart
+
 
 class TopDawgOrder {
   final String tdid;
   final double price;
+  final double? gross;
+  final double? total;
   final int quantity;
   final String productCode;
+  final String? upc;
+  final String? status;
+  final double? shipping;
+  final double? packingFee;
+  final String? transactionId;
 
   TopDawgOrder({
     required this.tdid,
     required this.price,
     required this.quantity,
     required this.productCode,
+    this.gross,
+    this.total,
+    this.upc,
+    this.status,
+    this.shipping,
+    this.packingFee,
+    this.transactionId,
   });
 
   factory TopDawgOrder.fromJson(Map<String, dynamic> json) {
     return TopDawgOrder(
       tdid: json['tdid'],
-      price: json['price'].toDouble(),
-      quantity: json['quantity'],
+      price: _toDouble(json['price']),
+      quantity: _toInt(json['quantity']),
       productCode: json['product_code'],
+      gross: _tryDouble(json['gross']),
+      total: _tryDouble(json['total']),
+      upc: json['upc'],
+      status: json['status']?.toString(),
+      shipping: _tryDouble(json['shipping']),
+      packingFee: _tryDouble(json['packing_fee']),
+      transactionId: json['transaction_id'],
     );
+  }
+
+  static double _toDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    return double.tryParse(value.toString()) ?? 0.0;
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    return int.tryParse(value.toString()) ?? 0;
+  }
+
+  static double? _tryDouble(dynamic value) {
+    if (value == null) return null;
+    return double.tryParse(value.toString());
   }
 }
 

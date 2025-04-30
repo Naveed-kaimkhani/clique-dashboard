@@ -34,6 +34,7 @@ class OrdersTableScreen extends StatelessWidget {
                   children: [
                     _buildSummaryCards(context),
                     const SizedBox(height: 16),
+
                     Expanded(
                       child: Card(
                         elevation: 8,
@@ -44,81 +45,82 @@ class OrdersTableScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: DataTable(
-                              columnSpacing: 24,
-                              horizontalMargin: 16,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                  width: 1,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: DataTable(
+                                columnSpacing: 24,
+                                horizontalMargin: 16,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                    width: 1,
+                                  ),
                                 ),
-                              ),
-                              headingRowColor: MaterialStateColor.resolveWith(
-                                (states) => Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.1),
-                              ),
-                              columns: const [
-                                DataColumn(
-                                    label:
-                                        Text('Order ID', style: _headerStyle)),
-                                DataColumn(
-                                    label:
-                                        Text('Customer', style: _headerStyle)),
-                                DataColumn(
-                                    label: Text('Total', style: _headerStyle)),
-                                DataColumn(
-                                    label: Text('Items', style: _headerStyle)),
-                                DataColumn(
-                                    label: Text('Status', style: _headerStyle)),
-                                DataColumn(
-                                    label:
-                                        Text('Created', style: _headerStyle)),
-                                DataColumn(
-                                    label:
-                                        Text('Details', style: _headerStyle)),
-                              ],
-                              rows: orders.map((order) {
-                                return DataRow(
-                                  cells: [
-                                    DataCell(Text(
-                                      order.orderId,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    )),
-                                    DataCell(Text(
-                                      order.customerId,
-                                      overflow: TextOverflow.ellipsis,
-                                    )),
-                                    DataCell(Text(
-                                      '\$${order.totalPrice.toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
+                                headingRowColor: MaterialStateColor.resolveWith(
+                                  (states) => Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.1),
+                                ),
+                                columns: const [
+                                  DataColumn(
+                                      label: Text('Order ID',
+                                          style: _headerStyle)),
+                                  DataColumn(
+                                      label: Text('Customer',
+                                          style: _headerStyle)),
+                                  DataColumn(
+                                      label:
+                                          Text('Total', style: _headerStyle)),
+                                  DataColumn(
+                                      label:
+                                          Text('Items', style: _headerStyle)),
+                                  DataColumn(
+                                      label:
+                                          Text('Status', style: _headerStyle)),
+                                  DataColumn(
+                                      label:
+                                          Text('Created', style: _headerStyle)),
+                                  DataColumn(
+                                      label:
+                                          Text('Details', style: _headerStyle)),
+                                ],
+                                rows: orders.map((order) {
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(Text(order.orderId,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500))),
+                                      DataCell(Text(order.customerId,
+                                          overflow: TextOverflow.ellipsis)),
+                                      DataCell(Text(
+                                          '\$${order.totalPrice.toStringAsFixed(2)}',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.bold))),
+                                      DataCell(Text(
+                                          '${order.topDawgOrders.length}')),
+                                      DataCell(_buildStatusBadge(order.status)),
+                                      DataCell(
+                                          Text(_formatDate(order.createdAt))),
+                                      DataCell(
+                                        IconButton(
+                                          icon: const Icon(Icons.info_outline),
+                                          onPressed: () =>
+                                              _showOrderDetails(context, order),
+                                        ),
                                       ),
-                                    )),
-                                    DataCell(
-                                        Text('${order.topDawgOrders.length}')),
-                                    DataCell(
-                                      _buildStatusBadge(order.status),
-                                    ),
-                                    DataCell(
-                                        Text(_formatDate(order.createdAt))),
-                                    DataCell(
-                                      IconButton(
-                                        icon: const Icon(Icons.info_outline),
-                                        onPressed: () =>
-                                            _showOrderDetails(context, order),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
+
+                 
                   ],
                 ),
               ),
