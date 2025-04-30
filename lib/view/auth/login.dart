@@ -107,14 +107,14 @@ class LoginScreen extends StatelessWidget {
                   buttonText: 'Login',
                   isLoading: otpViewModel.isLoading,
                   onPressed: () async {
-                    if (true) {
+                    if (validateFields()) {
                       otpViewModel.isLoading.value = true;
 
                       final SignupParams request = SignupParams(
                         name: "",
-                        email: "cliqueforappledemo@gmail.com",
+                        // email: "cliqueforappledemo@gmail.com",
 
-                        // email: _emailController.text,
+                        email: _emailController.text,
                         phone: "",
                         role: "",
                       );

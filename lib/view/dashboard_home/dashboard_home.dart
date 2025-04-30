@@ -38,7 +38,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Profit Chart",
+            Text("Total Profit",
                 style: TextStyle(color: Colors.grey, fontSize: 14)),
             SizedBox(height: 24),
             Text("\$${revenueController.revenueData.value?.totalProfit}",
@@ -59,7 +59,15 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Widget _buildProgressCard() {
+  Widget _buildRevenueChart() {
+    // final totalProfit = double.tryParse(revenueController.revenueData.value?.totalProfit ?? "0") ?? 0;
+
+    final totalProfit = revenueController.revenueData.value?.totalProfit ?? 0;
+    final totalRevenue = revenueController.revenueData.value?.totalRevenue ?? 0;
+    final percentage = totalProfit / totalRevenue;
+
+    // final percentage = totalProfit / totalRevenue;
+    final percentageText = "${(percentage * 100).toStringAsFixed(0)}%";
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -69,13 +77,21 @@ class _DashboardHomeState extends State<DashboardHome> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text("Revenue Chart",
+                style: TextStyle(color: Colors.grey, fontSize: 14)),
             SizedBox(height: 24),
-            CircularPercentIndicator(value: 0.70, percentage: "70%"),
+            Text("\$${revenueController.revenueData.value?.totalRevenue}",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 24),
-            Divider(),
-            // _buildStatRow("Cost", "\$1,823", "+12%"),
-            _buildStatRow("Revenue", "\$6,830", "+8%"),
-            _buildStatRow("Earning", "\$4,830", "+8%"),
+            CircularPercentIndicator(
+                value: percentage, percentage: percentageText),
+            // Divider(),
+            // _buildStatRow("Cost", "108", "+37.7%"),
+            // _buildStatRow(
+            //     "Total Revenue",
+            //     revenueController.revenueData.value?.totalRevenue.toString() ??
+            //         "",
+            //     ""),
           ],
         ),
       ),
@@ -141,43 +157,45 @@ class _DashboardHomeState extends State<DashboardHome> {
                         if (isMobile) ...[
                           _buildEarningCard(),
                           SizedBox(height: 12),
-                          _buildProgressCard(),
-                          SizedBox(height: 12),
-                          _buildBarChartCard(
-                              revenueController.revenueData.value?.totalRevenue
-                                      .toString() ??
-                                  "",
-                              "19%"),
+                          // _buildRevenueChart(),
+                          // SizedBox(height: 12),
+                          // _buildBarChartCard(
+                          //     revenueController.revenueData.value?.totalRevenue
+                          //             .toString() ??
+                          //         "",
+                          //     "19%"),
                         ] else ...[
                           LayoutBuilder(
                             builder: (context, constraints) {
-                              return Wrap(
-                                spacing: 16,
-                                runSpacing: 16,
-                                children: [
-                                  SizedBox(
-                                    width: isTablet
-                                        ? constraints.maxWidth / 2 - 24
-                                        : constraints.maxWidth / 3 - 24,
-                                    child: _buildEarningCard(),
-                                  ),
-                                  SizedBox(
-                                    width: isTablet
-                                        ? constraints.maxWidth / 2 - 24
-                                        : constraints.maxWidth / 3 - 24,
-                                    child: _buildProgressCard(),
-                                  ),
-                                  if (!isTablet)
+                              return Center(
+                                child: Wrap(
+                                  spacing: 16,
+                                  runSpacing: 16,
+                                  children: [
                                     SizedBox(
-                                      width: constraints.maxWidth / 3 - 24,
-                                      child: _buildBarChartCard(
-                                          revenueController.revenueData.value
-                                                  ?.totalRevenue
-                                                  .toString() ??
-                                              "",
-                                          "19%"),
+                                      width: isTablet
+                                          ? constraints.maxWidth / 2 - 24
+                                          : constraints.maxWidth / 3 - 24,
+                                      child: _buildEarningCard(),
                                     ),
-                                ],
+                                    // SizedBox(
+                                    //   width: isTablet
+                                    //       ? constraints.maxWidth / 2 - 24
+                                    //       : constraints.maxWidth / 3 - 24,
+                                    //   child: _buildRevenueChart(),
+                                    // ),
+                                    // if (!isTablet)
+                                    //   SizedBox(
+                                    //     width: constraints.maxWidth / 3 - 24,
+                                    //     child: _buildBarChartCard(
+                                    //         revenueController.revenueData.value
+                                    //                 ?.totalRevenue
+                                    //                 .toString() ??
+                                    //             "",
+                                    //         "19%"),
+                                    //   ),
+                                  ],
+                                ),
                               );
                             },
                           ),
@@ -207,6 +225,14 @@ class _DashboardHomeState extends State<DashboardHome> {
 
 // Rest of your code remains the same...
 Widget _buildStatRow(String title, String value, String change) {
+  final revenueController = Get.isRegistered<RevenueController>()
+      ? Get.find<RevenueController>()
+      : Get.put(RevenueController());
+
+  final totalProfit = revenueController.revenueData.value?.totalProfit ?? 0;
+  final totalRevenue = revenueController.revenueData.value?.totalRevenue ?? 0;
+  final percentage = totalProfit / totalRevenue;
+
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4.0),
     child: Row(
@@ -216,10 +242,11 @@ Widget _buildStatRow(String title, String value, String change) {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(change,
-                style: TextStyle(
-                    color: change.contains('-') ? Colors.red : Colors.green)),
+            Text(totalRevenue.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            // Text(change,
+            //     style: TextStyle(
+            //         color: change.contains('-') ? Colors.red : Colors.green)),
           ],
         ),
       ],
