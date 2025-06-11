@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -100,6 +102,7 @@ class _DashboardHomeState extends State<DashboardHome> {
 
   @override
   Widget build(BuildContext context) {
+  
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final isMobile = screenWidth < 600;
@@ -157,13 +160,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                         if (isMobile) ...[
                           _buildEarningCard(),
                           SizedBox(height: 12),
-                          // _buildRevenueChart(),
-                          // SizedBox(height: 12),
-                          // _buildBarChartCard(
-                          //     revenueController.revenueData.value?.totalRevenue
-                          //             .toString() ??
-                          //         "",
-                          //     "19%"),
+      
                         ] else ...[
                           LayoutBuilder(
                             builder: (context, constraints) {
@@ -178,22 +175,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                                           : constraints.maxWidth / 3 - 24,
                                       child: _buildEarningCard(),
                                     ),
-                                    // SizedBox(
-                                    //   width: isTablet
-                                    //       ? constraints.maxWidth / 2 - 24
-                                    //       : constraints.maxWidth / 3 - 24,
-                                    //   child: _buildRevenueChart(),
-                                    // ),
-                                    // if (!isTablet)
-                                    //   SizedBox(
-                                    //     width: constraints.maxWidth / 3 - 24,
-                                    //     child: _buildBarChartCard(
-                                    //         revenueController.revenueData.value
-                                    //                 ?.totalRevenue
-                                    //                 .toString() ??
-                                    //             "",
-                                    //         "19%"),
-                                    //   ),
+                             
                                   ],
                                 ),
                               );

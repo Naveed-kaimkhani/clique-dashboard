@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:post_krakren_dashboard/controllers/user_controller.dart';
 import 'package:post_krakren_dashboard/view/chat_screens/chat_list.dart';
 import 'package:post_krakren_dashboard/view/dashboard_home/dashboard_home.dart';
 import 'package:post_krakren_dashboard/view/users_influencers/user_influencers_screens.dart';
@@ -17,6 +22,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
+  final UserController controller = Get.find<UserController>();
   final List<Widget> _screens = [
     DashboardHome(),
     UsersInfluencersScreen(),
@@ -28,6 +34,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log(controller.token.value);
     return Scaffold(
       body: Row(
         children: [
@@ -62,7 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _drawerItem(Icons.group, "Users / Influencers", 1),
         _drawerItem(Icons.calendar_today, "Product Details", 2),
         _drawerItem(Icons.chat, "Videos Decision", 3),
-                _drawerItem(Icons.chat, "Approved Popstreams", 4),
+        _drawerItem(Icons.chat, "Approved Popstreams", 4),
         _drawerItem(Icons.settings, "Cliques", 5),
       ],
     );
@@ -88,7 +95,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-
-
-
-

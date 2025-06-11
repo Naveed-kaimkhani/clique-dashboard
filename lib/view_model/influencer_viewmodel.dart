@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:post_krakren_dashboard/controllers/user_controller.dart';
 import 'package:post_krakren_dashboard/data/model/influencer_model.dart';
@@ -45,7 +46,7 @@ class InfluencerViewmodel extends GetxController {
               'Bearer ${userController.token.value}', // Use your token variable
         },
       );
-
+      log(response.body);
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['message'] == 'User deleted successfully') {
