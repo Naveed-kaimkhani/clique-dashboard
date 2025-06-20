@@ -2,13 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:post_krakren_dashboard/components/custom_text_field.dart';
 import 'package:post_krakren_dashboard/components/label_text.dart';
 import 'package:post_krakren_dashboard/constants/app_colors.dart';
 import 'package:post_krakren_dashboard/constants/app_images.dart';
 import 'package:post_krakren_dashboard/view/invite_team/transparent_button.dart';
 
-import '../../components/gradient_button.dart';
 import '../../constants/app_routes.dart';
 
 class InviteTeam extends StatefulWidget {
@@ -81,13 +79,13 @@ class _InviteTeamState extends State<InviteTeam> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          CustomTextField(hintText: "Email or Phone Number"),
-                          SizedBox(height: inputSpacing),
-                          CustomTextField(hintText: "Email or Phone Number"),
-                          SizedBox(height: inputSpacing),
-                          CustomTextField(hintText: "Email or Phone Number"),
-                          SizedBox(height: inputSpacing),
-                          CustomTextField(hintText: "Email or Phone Number"),
+                          // CustomTextField(hintText: "Email or Phone Number"),
+                          // SizedBox(height: inputSpacing),
+                          // CustomTextField(hintText: "Email or Phone Number"),
+                          // SizedBox(height: inputSpacing),
+                          // CustomTextField(hintText: "Email or Phone Number"),
+                          // SizedBox(height: inputSpacing),
+                          // CustomTextField(hintText: "Email or Phone Number"),
                           SizedBox(height: size.height * 0.05), // Extra space before buttons
                         ],
                       ),
@@ -104,9 +102,9 @@ class _InviteTeamState extends State<InviteTeam> {
               right: paddingHorizontal,
               child: Column(
                 children: [
-                  GradientButton(onTap: () {
-                    Get.toNamed(RouteName.setPermissions);
-                  }, text: "Send Invite"),
+                  // GradientButton(onTap: () {
+                  //   Get.toNamed(RouteName.setPermissions);
+                  // }, text: "Send Invite"),
                   SizedBox(height: size.height * 0.015),
                   TransparentButton(text: "Skip", onTap: () {}),
                 ],

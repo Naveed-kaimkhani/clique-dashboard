@@ -12,7 +12,6 @@ class RevenueController extends GetxController {
   final orderRepo = OrdersRepo();
   Future<void> fetchRevenue() async {
     try {
-      log("revenue function called");
       isLoading.value = true;
       error.value = '';
       final data = await orderRepo.fetchRevenueData(
@@ -29,7 +28,6 @@ class RevenueController extends GetxController {
 
   @override
   void onInit() {
-    log("inside revenue model");
     fetchRevenue();
     super.onInit();
   }
